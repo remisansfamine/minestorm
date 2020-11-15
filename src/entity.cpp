@@ -4,34 +4,34 @@
 
 EntityManager* Entity::m_entityManager;
 
-Entity::Entity(const Vector2D& pos, const Vector2D& dir)
-	: m_referential(pos, dir)
+Entity::Entity(const Referential2D& referential)
+	: m_referential(referential)
 {
 	
 }
 	
 void Entity::stayInScreen()
 {
-	if (m_referential.m_origin.x <= 62)
+	if (m_referential.m_origin.x < 62)
 		m_referential.m_origin.x = 580;
-	else if (m_referential.m_origin.x >= 580)
+	else if (m_referential.m_origin.x > 580)
 		m_referential.m_origin.x = 62;
 
-	if (m_referential.m_origin.y <= 62)
+	if (m_referential.m_origin.y < 62)
 		m_referential.m_origin.y = 710;
-	else if (m_referential.m_origin.y >= 710)
+	else if (m_referential.m_origin.y > 710)
 		m_referential.m_origin.y = 64;
 }
 
-void Entity::draw(const Texture2D& spriteSheet)
+void Entity::draw(const Texture2D& spriteSheet) const
 {
 	float textureSize = 256.f * m_size;
 	Vector2 origin =  Vector2D(0.5f, 0.5f) * textureSize;
 	Rectangle destRect = { m_referential.m_origin.x, m_referential.m_origin.y, textureSize, textureSize };
-	DrawTexturePro(spriteSheet, m_srcRect, destRect, origin, m_referential.m_angle, m_color);
+	DrawTexturePro(spriteSheet, m_srcRect, destRect, origin, m_referential.m_angle * 180.f / M_PI, m_color);
 }
 
-void Entity::drawDebug()
+void Entity::drawDebug() const
 {
 	Vector2D pos = m_referential.m_origin;
 

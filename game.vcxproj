@@ -84,6 +84,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\bullet.cpp" />
+    <ClCompile Include="src\fireball.cpp" />
     <ClCompile Include="src\projectile.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\entity_manager.cpp" />
@@ -104,6 +106,8 @@
     <ClCompile Include="src\vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\bullet.h" />
+    <ClInclude Include="include\fireball.h" />
     <ClInclude Include="include\projectile.h" />
     <ClInclude Include="include\entity.h" />
     <ClInclude Include="include\entity_manager.h" />

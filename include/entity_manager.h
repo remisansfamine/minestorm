@@ -3,15 +3,16 @@
 #include <vector>
 
 #include "player.h"
-#include "projectile.h"
 
 class Mine;
+class Projectile;
 
 class EntityManager
 {
 	private:
 		Texture2D m_spriteSheet;
 		void drawDebug();
+		void clear();
 
 	public:
 		EntityManager();
@@ -19,7 +20,7 @@ class EntityManager
 
 		std::vector<Player> m_player;
 		std::vector<Mine*> m_mine;
-		std::vector<Projectile> m_bullet;
+		std::vector<Projectile*> m_projectile;
 
 		void update(float);
 		void draw(bool isDebugging);

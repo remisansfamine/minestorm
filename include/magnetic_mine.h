@@ -4,6 +4,9 @@
 
 class MagneticMine : public Mine
 {
+	private:
+		void createCollider(int size = 1) override;
+
 	public:
-		MagneticMine(const Vector2D& pos, const Vector2D& dir);
+		MagneticMine(const Referential2D& referential);
 };

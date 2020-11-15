@@ -2,13 +2,10 @@
 
 Game::Game(int screenWidth, int screenHeight)
 {
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
     SetTargetFPS(60);
 
     srand((unsigned int)GetFrameTime());
-
-    m_hud.loadTextures();
 }
 
 Game::~Game()
