@@ -45,24 +45,6 @@ struct Vector2D
     Vector2D normal() const;
 };
 
-struct Referential2D
-{
-    Vector2D m_origin;
-    Vector2D m_i = { 1.f, 0.f };
-    Vector2D m_j = { 0.f, 1.f };
-    float    m_angle = 0.f;
-
-    Referential2D(const Vector2D& origin, const Vector2D& i);
-
-    void rotate(float angle);
-
-    Vector2D pointLocalToGlobal(const Vector2D& pointLocal) const;
-    Vector2D pointGlobalToLocal(const Vector2D& pointGlobal) const;
-
-    Vector2D vectorLocalToGlobal(const Vector2D& vectLocal) const;
-    Vector2D vectorGlobalToLocal(const Vector2D& vectGlobal) const;
-};
-
 // Struct of segment that starts at pt1 and ends at pt2
 struct Segment
 {
@@ -100,16 +82,42 @@ struct OrientedRect
     float angle;
 };
 
-struct ConvexPolygon
+struct ConvexPolygon 
 {
     std::vector<Vector2D> pts;
-    int count;
+
+    Rect getAABB() const;
 };
 
 struct ConcavePolygon
 {
     std::vector<ConvexPolygon> polygon;
-    int count;
+
+    Rect getAABB() const;
+};
+
+struct Referential2D
+{
+    Vector2D m_origin;
+    Vector2D m_i = { 1.f, 0.f };
+    Vector2D m_j = { 0.f, 1.f };
+    float    m_angle = 0.f;
+
+    Referential2D(const Vector2D& origin, const Vector2D& i);
+
+    void rotate(float angle);
+
+    Vector2D pointLocalToGlobal(const Vector2D& pointLocal) const;
+    Vector2D pointGlobalToLocal(const Vector2D& pointGlobal) const;
+
+    Vector2D vectorLocalToGlobal(const Vector2D& vectLocal) const;
+    Vector2D vectorGlobalToLocal(const Vector2D& vectGlobal) const;
+
+    ConvexPolygon convexToGlobal(const ConvexPolygon& polygonLocal) const;
+    ConvexPolygon convexToLocal(const ConvexPolygon& polygonGlobal) const;
+
+    ConcavePolygon concaveToGlobal(const ConcavePolygon& polygonLocal) const;
+    ConcavePolygon concaveToLocal(const ConcavePolygon& polygonGlobal) const;
 };
 
 // Struct of point, or vector of coordinates (x; y)

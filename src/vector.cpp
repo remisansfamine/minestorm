@@ -3,7 +3,7 @@
 #include <cmath>
 
 Vector2D::Vector2D(float x, float y)
-: x(x), y(y) {}
+    : x(x), y(y) {}
 
 Vector2D::Vector2D(Vector2 vect)
     : x(vect.x), y(vect.y) {}
@@ -132,12 +132,17 @@ float sqrDistance(const Vector2D& point, const Line& line)
 float angle(const Vector2D& vect1, const Vector2D& vect2)
 {
     /*float magn = vect1.magnitude() * vect2.magnitude();
-    return magn == 0 ? 0 : acos(dot(vect1, vect2) / magn);*/
 
-    if (!vect1.sqrMagnitude() || !vect2.sqrMagnitude())
-        return 0;
+    if (magn == 0)
+        return 0.f;
 
-    return fmod(atan2f(vect1.x * vect2.y - vect1.y * vect2.x, dot(vect1, vect2)), 2 * M_PI);
+    float crossProd = vect1.x * vect2.y - vect1.y * vect2.x;
+
+    return (crossProd < 0.f) ? (2.f * M_PI - acos(dot(vect1, vect2) / magn)) : (acos(dot(vect1, vect2) / magn));*/
+
+    float dotProd = dot(vect1, vect2);
+    float crossProd = (vect1.x * vect2.y) - (vect1.y * vect2.x);
+    return atan2f(crossProd, dotProd);
 }
 
 Vector2D& Vector2D::rotate(float angle)

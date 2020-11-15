@@ -4,12 +4,15 @@
 
 class Mine : public Entity
 {
-	private:
+	protected:
 		void move(float) override;
 		void rotate(float) override;
+		virtual void createCollider(int size = 1) = 0;
 
 	public:
-		Mine(const Vector2D& pos, const Vector2D& dir);
+		ConcavePolygon m_collider;
+
+		Mine(const Referential2D& referential);
 		void update(float) override;
-		void drawDebug() override;
+		void drawDebug() const override;
 };

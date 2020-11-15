@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
     int screenWidth = 640;
     int screenHeight = 800;
 
-    //InitWindow(screenWidth, screenHeight, "Minestorm - Remi");
+    InitWindow(screenWidth, screenHeight, "Minestorm - Remi");
 
     Game game(screenWidth, screenHeight);
 

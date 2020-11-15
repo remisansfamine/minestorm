@@ -104,21 +104,23 @@ bool    intersect(Circle circle, Rect rect)
 
 bool    intersect(Rect rect1, Rect rect2)
 {
-    return rect1.pt.x + rect1.halfWidth >= rect2.pt.x &&
-           rect1.pt.x <= rect2.pt.x + rect2.halfWidth &&
-           rect1.pt.y + rect1.halfHeight >= rect2.pt.y &&
-           rect1.pt.y <= rect2.pt.y + rect2.halfHeight;
+    return rect1.pt.x + rect1.halfWidth * 2.f > rect2.pt.x &&
+           rect1.pt.x < rect2.pt.x + rect2.halfWidth * 2.f &&
+           rect1.pt.y + rect1.halfHeight * 2.f > rect2.pt.y &&
+           rect1.pt.y < rect2.pt.y + rect2.halfHeight * 2.f;
 }
 
 bool    intersect(ConvexPolygon convex, Vector2D point)
 {
-    for (int i = 0; i < convex.count; i++)
+    int count = convex.pts.size();
+
+    for (int i = 0; i < count; i++)
     {
-        Segment segment = { convex.pts[i], convex.pts[(i + 1) % convex.count] };
+        Segment segment = { convex.pts[i], convex.pts[(i + 1) % count] };
         Vector2D normal = segment.normal();
 
         Range range(convex.pts[0], normal);
-        for (int i = 1; i < convex.count; i++)
+        for (int i = 1; i < count; i++)
             range.merge(Range(convex.pts[i], normal));
 
         if (!range.interfere(Range(point, normal)))
@@ -129,34 +131,37 @@ bool    intersect(ConvexPolygon convex, Vector2D point)
 
 bool    intersect(ConvexPolygon convex1, ConvexPolygon convex2)
 {
-    for (int i = 0; i < convex1.count; i++)
+    int count1 = convex1.pts.size();
+    int count2 = convex2.pts.size();
+
+    for (int i = 0; i < count1; i++)
     {
-        Segment segment = { convex1.pts[i], convex1.pts[(i + 1) % convex1.count] };
+        Segment segment = { convex1.pts[i], convex1.pts[(i + 1) % count1] };
         Vector2D normal = segment.normal();
 
         Range range1(convex1.pts[0], normal);
-        for (int i = 1; i < convex1.count; i++)
+        for (int i = 1; i < count1; i++)
             range1.merge(Range(convex1.pts[i], normal));
 
         Range range2(convex2.pts[0], normal);
-        for (int i = 1; i < convex2.count; i++)
+        for (int i = 1; i < count2; i++)
             range2.merge(Range(convex2.pts[i], normal));
 
         if (!range1.interfere(range2))
             return false;
     }
 
-    for (int i = 0; i < convex2.count; i++)
+    for (int i = 0; i < count2; i++)
     {
-        Segment segment = { convex2.pts[i], convex2.pts[(i + 1) % convex2.count] };
+        Segment segment = { convex2.pts[i], convex2.pts[(i + 1) % count2] };
         Vector2D normal = segment.normal();
 
         Range range1(convex1.pts[0], normal);
-        for (int i = 0; i < convex1.count; i++)
+        for (int i = 0; i < count1; i++)
             range1.merge(Range(convex1.pts[i], normal));
 
         Range range2(convex2.pts[0], normal);
-        for (int i = 0; i < convex2.count; i++)
+        for (int i = 0; i < count2; i++)
             range2.merge(Range(convex2.pts[i], normal));
 
         if (!range1.interfere(range2))
@@ -168,13 +173,15 @@ bool    intersect(ConvexPolygon convex1, ConvexPolygon convex2)
 
 bool    intersect(ConvexPolygon convex, Circle circle)
 {
-    for (int i = 0; i < convex.count; i++)
+    int count = convex.pts.size();
+
+    for (int i = 0; i < count; i++)
     {
-        Segment segment = { convex.pts[i], convex.pts[(i + 1) % convex.count] };
+        Segment segment = { convex.pts[i], convex.pts[(i + 1) % count] };
         Vector2D normal = segment.normal();
 
         Range range(convex.pts[0], normal);
-        for (int i = 1; i < convex.count; i++)
+        for (int i = 1; i < count; i++)
             range.merge(Range(convex.pts[i], normal));
 
         if (!range.interfere(Range(circle, normal)))
@@ -184,7 +191,7 @@ bool    intersect(ConvexPolygon convex, Circle circle)
     // Get nearest point
     Vector2D nearestPoint = convex.pts[0];
     float currentDistance = sqrDistance(nearestPoint, circle.center);
-    for (int i = 1; i < convex.count; i++)
+    for (int i = 1; i < count; i++)
     {
         if (sqrDistance(convex.pts[i], circle.center) < currentDistance)
         {
@@ -196,7 +203,7 @@ bool    intersect(ConvexPolygon convex, Circle circle)
     Vector2D dir = (circle.center - nearestPoint).normalized();
 
     Range range(convex.pts[0], dir);
-        for (int i = 1; i < convex.count; i++)
+        for (int i = 1; i < count; i++)
             range.merge(Range(convex.pts[i], dir));
     
     if (!range.interfere(Range(circle, dir)))

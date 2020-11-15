@@ -4,6 +4,9 @@
 
 class FireballMine : public Mine
 {
+	private:
+		void createCollider(int size = 1) override;
+
 	public:
-		FireballMine(const Vector2D& pos, const Vector2D& dir);
+		FireballMine(const Referential2D& referential);
 };
