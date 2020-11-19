@@ -3,17 +3,19 @@
 #include <cfloat>
 #include <cmath>
 
-bool intersect(Vector2D point1, Vector2D point2)
+#include <iostream>
+
+bool intersect(const Vector2D& point1, const Vector2D& point2)
 {
     return (point1 - point2).sqrMagnitude() <= FLT_EPSILON;
 }
 
-bool intersect(Vector2D point, Line line)
+bool intersect(const Vector2D& point, const Line& line)
 {
     return sqrDistance(point, line) <= FLT_EPSILON;
 }
 
-bool intersect(Vector2D point, Segment segment)
+bool intersect(const Vector2D& point, const Segment& segment)
 {
     Line line(segment);
 
@@ -23,12 +25,12 @@ bool intersect(Vector2D point, Segment segment)
     return Range(segment, line.dir).interfere(Range(point, line.dir));
 }
 
-bool    intersect(Vector2D point, Rect rect)
+bool    intersect(const Vector2D& point, const Rect& rect)
 {
     return point.x >= rect.pt.x - rect.halfWidth && point.x <= rect.pt.x + rect.halfWidth && point.y >= rect.pt.y - rect.halfHeight && point.y <= rect.pt.y + rect.halfHeight;
 }
 
-bool    intersect(Line line1, Line line2)
+bool    intersect(const Line& line1, const Line& line2)
 {
     // Intersect
     if (dot(line1.dir.normal(), line2.dir) != 0)
@@ -42,7 +44,7 @@ bool    intersect(Line line1, Line line2)
     return false;
 }
 
-bool    intersect(Line line, Segment segment)
+bool    intersect(const Line& line, const Segment& segment)
 {
     Vector2D normal = line.dir.normal();
 
@@ -52,7 +54,7 @@ bool    intersect(Line line, Segment segment)
     return intersect(line, Line(segment));
 }
 
-bool    intersect(Segment segment1, Segment segment2)
+bool    intersect(const Segment& segment1, const Segment& segment2)
 {
     Line line(segment1);
 
@@ -62,17 +64,17 @@ bool    intersect(Segment segment1, Segment segment2)
     return Range(segment1, line.dir).interfere(Range(segment2, line.dir));
 }
 
-bool    intersect(Circle circle, Vector2D point)
+bool    intersect(const Circle& circle, const Vector2D& point)
 {
     return (point - circle.center).sqrMagnitude() <= circle.radius * circle.radius;
 }
 
-bool    intersect(Circle circle, Line line)
+bool    intersect(const Circle& circle, const Line& line)
 {
     return sqrDistance(circle.center, line) <= circle.radius * circle.radius;
 }
 
-bool    intersect(Circle circle, Segment segment)
+bool    intersect(const Circle& circle, const Segment& segment)
 {
     Line line(segment);
 
@@ -85,12 +87,12 @@ bool    intersect(Circle circle, Segment segment)
     return Range(circle, line.dir).interfere(Range(segment, line.dir));
 }
 
-bool    intersect(Circle circle1, Circle circle2)
+bool    intersect(const Circle& circle1, const Circle& circle2)
 {
     return sqrDistance(circle1.center, circle2.center) <= (circle1.radius + circle2.radius) * (circle1.radius + circle2.radius);
 }
 
-bool    intersect(Circle circle, Rect rect)
+bool    intersect(const Circle& circle, const Rect& rect)
 {
     if (intersect(circle.center, rect))
         return true;
@@ -102,7 +104,7 @@ bool    intersect(Circle circle, Rect rect)
     return sqrDistance(height, circle.center) <= circle.radius * circle.radius;
 }
 
-bool    intersect(Rect rect1, Rect rect2)
+bool    intersect(const Rect& rect1, const Rect& rect2)
 {
     return rect1.pt.x + rect1.halfWidth * 2.f > rect2.pt.x &&
            rect1.pt.x < rect2.pt.x + rect2.halfWidth * 2.f &&
@@ -110,9 +112,9 @@ bool    intersect(Rect rect1, Rect rect2)
            rect1.pt.y < rect2.pt.y + rect2.halfHeight * 2.f;
 }
 
-bool    intersect(ConvexPolygon convex, Vector2D point)
+bool    intersect(const ConvexPolygon& convex, const Vector2D& point)
 {
-    int count = convex.pts.size();
+    size_t count = convex.pts.size();
 
     for (int i = 0; i < count; i++)
     {
@@ -129,10 +131,10 @@ bool    intersect(ConvexPolygon convex, Vector2D point)
     return true;
 }
 
-bool    intersect(ConvexPolygon convex1, ConvexPolygon convex2)
+bool    intersect(const ConvexPolygon& convex1, const ConvexPolygon& convex2)
 {
-    int count1 = convex1.pts.size();
-    int count2 = convex2.pts.size();
+    size_t count1 = convex1.pts.size();
+    size_t count2 = convex2.pts.size();
 
     for (int i = 0; i < count1; i++)
     {
@@ -171,9 +173,9 @@ bool    intersect(ConvexPolygon convex1, ConvexPolygon convex2)
     return true;
 }
 
-bool    intersect(ConvexPolygon convex, Circle circle)
+bool    intersect(const ConvexPolygon& convex, const Circle& circle)
 {
-    int count = convex.pts.size();
+    size_t count = convex.pts.size();
 
     for (int i = 0; i < count; i++)
     {
@@ -210,4 +212,52 @@ bool    intersect(ConvexPolygon convex, Circle circle)
             return false;
 
     return true;
+}
+
+bool intersect(const ConcavePolygon& concave1, const ConcavePolygon& concave2)
+{
+    // TODO: FIX AABBs
+
+    // if (intersect(concave1.m_AABB, concave2.m_AABB))
+    {
+        for (const ConvexPolygon& convex1 : concave1.polygon)
+        {
+            Rect AABB1 = convex1.getAABB();
+
+            for (const ConvexPolygon& convex2 : concave2.polygon)
+            {
+                Rect AABB2 = convex2.getAABB();
+
+                if (intersect(AABB1, AABB2))
+                {
+                    if (intersect(convex1, convex2))
+                        return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+bool intersect(const ConcavePolygon& concave, const Circle& circle)
+{
+    if (intersect(circle, concave.m_AABB))
+    {
+        std::cout << "oui" << std::endl;
+        for (const ConvexPolygon& polygon : concave.polygon)
+        {
+            Rect AABB = polygon.getAABB();
+
+            if (intersect(circle, AABB))
+            {
+                if (intersect(polygon, circle))
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
 }

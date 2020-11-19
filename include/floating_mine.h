@@ -2,13 +2,12 @@
 
 #include "mine.h"
 
-#include "math_toolbox.h"
-
 class FloatingMine : public Mine
 {
 	private:
-		void createCollider(int size = 1) override;
+		void createCollider(float size = 1.f) override;
 
 	public:
-		FloatingMine(const Referential2D& referential);
+		FloatingMine(int size = 2);
+		void atDestroy() override;
 };

@@ -97,12 +97,13 @@
     <ClCompile Include="src\magnetic_fireball_mine.cpp" />
     <ClCompile Include="src\magnetic_mine.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\math_toolbox.cpp" />
+    <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\mine.cpp" />
-    <ClCompile Include="src\mineplayer.cpp" />
+    <ClCompile Include="src\minelayer.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\range.cpp" />
     <ClCompile Include="src\referential.cpp" />
+    <ClCompile Include="src\spawn_point.cpp" />
     <ClCompile Include="src\vector.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -120,8 +121,9 @@
     <ClInclude Include="include\magnetic_mine.h" />
     <ClInclude Include="include\math_toolbox.h" />
     <ClInclude Include="include\mine.h" />
-    <ClInclude Include="include\mineplayer.h" />
+    <ClInclude Include="include\minelayer.h" />
     <ClInclude Include="include\player.h" />
+    <ClInclude Include="include\spawn_point.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\Assets Mine Storm.jpg" />

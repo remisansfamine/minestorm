@@ -7,5 +7,8 @@
 class Fireball : public Projectile
 {
 	public:
-		Fireball(const Referential2D& referential);
+		int m_score = 110;
+
+		Fireball(const Referential2D& referential, Color color);
+		void update(float deltaTime) override;
 };

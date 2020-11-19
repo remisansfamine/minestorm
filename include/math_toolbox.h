@@ -92,18 +92,20 @@ struct ConvexPolygon
 struct ConcavePolygon
 {
     std::vector<ConvexPolygon> polygon;
+    Rect m_AABB;
 
-    Rect getAABB() const;
+    Rect getAABB();
 };
 
 struct Referential2D
 {
-    Vector2D m_origin;
+    Vector2D m_origin = { 0.f, 0.f };
     Vector2D m_i = { 1.f, 0.f };
     Vector2D m_j = { 0.f, 1.f };
     float    m_angle = 0.f;
 
-    Referential2D(const Vector2D& origin, const Vector2D& i);
+    Referential2D() = default;
+    Referential2D(const Vector2D& origin, const Vector2D& i = {1.f, 0.f});
 
     void rotate(float angle);
 
@@ -154,37 +156,42 @@ float sqrDistance(const Vector2D& point, const Line& line);
 
 float min(float value1, float value2);
 float max(float value1, float value2);
+float randomNumber(float Min, float Max);
 float clamp(float value, float min, float max);
-float sign(float value);
+int sign(float value);
 
-bool    intersect(Vector2D point1, Vector2D point2);
+bool    intersect(const Vector2D& point1, const Vector2D& point2);
 
-bool    intersect(Vector2D point, Line line);
+bool    intersect(const Vector2D& point, const Line& line);
 
-bool    intersect(Vector2D point, Segment segment);
+bool    intersect(const Vector2D& point, const Segment& segment);
 
-bool    intersect(Vector2D point, Rect box);
+bool    intersect(const Vector2D& point, const Rect& box);
 
-bool    intersect(Line line1, Line line2);
+bool    intersect(const Line& line1, const Line& line2);
 
-bool    intersect(Line line, Segment segment);
+bool    intersect(const Line& line, const Segment& segment);
 
-bool    intersect(Segment segment1, Segment segment2);
+bool    intersect(const Segment& segment1, const Segment& segment2);
 
-bool    intersect(Circle circle, Vector2D point);
+bool    intersect(const Circle& circle, const Vector2D& point);
 
-bool    intersect(Circle circle, Line line);
+bool    intersect(const Circle& circle, const Line& line);
 
-bool    intersect(Circle circle, Segment segment);
+bool    intersect(const Circle& circle, const Segment& segment);
 
-bool    intersect(Circle circle1, Circle circle2);
+bool    intersect(const Circle& circle1, const Circle& circle2);
 
-bool    intersect(Circle circle, Rect box);
+bool    intersect(const Circle& circle, const Rect& box);
 
-bool    intersect(Rect box1, Rect box2);
+bool    intersect(const Rect& box1, const Rect& box2);
 
-bool    intersect(ConvexPolygon convex, Vector2D point);
+bool    intersect(const ConvexPolygon& convex, const Vector2D& point);
 
-bool    intersect(ConvexPolygon convex1, ConvexPolygon convex2);
+bool    intersect(const ConvexPolygon& convex1, const ConvexPolygon& convex2);
 
-bool    intersect(ConvexPolygon convex, Circle cicle);
+bool    intersect(const ConvexPolygon& convex, const Circle& cicle);
+
+bool    intersect(const ConcavePolygon& concave1, const ConcavePolygon& concave2);
+
+bool    intersect(const ConcavePolygon& concave, const Circle& circle);

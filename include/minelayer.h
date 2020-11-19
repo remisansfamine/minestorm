@@ -2,7 +2,7 @@
 
 #include "entity.h"
 
-class Mineplayer : public Entity
+class Minelayer : public Entity
 {
 
 };
