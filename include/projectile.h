@@ -2,17 +2,16 @@
 
 #include "entity.h"
 
-#include "entity_manager.h"
-
 class Projectile : public Entity
 {
 	public:
-		Projectile(const Referential2D& referential, Color color);
+		Projectile(const Referential2D& referential, Color color = WHITE);
 		void update(float deltaTime) override;
 		void drawDebug() const override;
 		Circle getCircle() const;
 
-	private:
+	protected:
+		float m_lifeTime;
 		float m_radius = 13.f;
 		void rotate(float deltaTime) override;
 		void move(float deltaTime) override;

@@ -34,9 +34,6 @@
     <ClCompile Include="src\magnetic_fireball_mine.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\math_toolbox.cpp">
-      <Filter>src\maths</Filter>
-    </ClCompile>
     <ClCompile Include="src\referential.cpp">
       <Filter>src\maths</Filter>
     </ClCompile>
@@ -49,9 +46,6 @@
     <ClCompile Include="src\intersection.cpp">
       <Filter>src\maths</Filter>
     </ClCompile>
-    <ClCompile Include="src\mineplayer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\projectile.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -60,6 +54,15 @@
     </ClCompile>
     <ClCompile Include="src\fireball.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spawn_point.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\minelayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>src\maths</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,9 +102,6 @@
     <ClInclude Include="include\magnetic_fireball_mine.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\mineplayer.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\projectile.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -109,6 +109,12 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\fireball.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spawn_point.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\minelayer.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

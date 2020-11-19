@@ -2,13 +2,12 @@
 
 #include "entity_manager.h"
 
-EntityManager* Entity::m_entityManager;
+EntityManager*	Entity::entityManager;
+Rect			Entity::screenBorder = { { 320.f, 396.f }, 259.f, 324.f };
 
 Entity::Entity(const Referential2D& referential)
 	: m_referential(referential)
-{
-	
-}
+{ }
 	
 void Entity::stayInScreen()
 {
@@ -25,7 +24,7 @@ void Entity::stayInScreen()
 
 void Entity::draw(const Texture2D& spriteSheet) const
 {
-	float textureSize = 256.f * m_size;
+	float textureSize = 256.f * (0.25f * m_size + 0.25f);
 	Vector2 origin =  Vector2D(0.5f, 0.5f) * textureSize;
 	Rectangle destRect = { m_referential.m_origin.x, m_referential.m_origin.y, textureSize, textureSize };
 	DrawTexturePro(spriteSheet, m_srcRect, destRect, origin, m_referential.m_angle * 180.f / M_PI, m_color);

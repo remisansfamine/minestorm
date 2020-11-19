@@ -2,11 +2,19 @@
 
 #include "mine.h"
 
+class Player;
+
 class MagneticMine : public Mine
 {
 	private:
-		void createCollider(int size = 1) override;
+		Player* m_target = nullptr;
+
+		void createCollider(float size = 1.f) override;
+		void getTarget();
 
 	public:
-		MagneticMine(const Referential2D& referential);
+		MagneticMine(int size = 2);
+
+		void atDestroy() override;
+		void update(float deltaTime) override;
 };

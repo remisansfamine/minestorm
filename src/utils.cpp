@@ -1,7 +1,5 @@
 #include "math_toolbox.h"
 
-#include <iostream>
-
 float min(float value1, float value2)
 {
     return value1 <= value2 ? value1 : value2;
@@ -32,7 +30,7 @@ Rect ConvexPolygon::getAABB() const
     return { center, (xMax - xMin) * 0.5f, (yMax - yMin) * 0.5f};
 }
 
-Rect ConcavePolygon::getAABB() const
+Rect ConcavePolygon::getAABB()
 {
     float xMin = FLT_MAX, yMin = FLT_MAX, xMax = FLT_MIN, yMax = FLT_MIN;
     for (const ConvexPolygon& polygon : polygon)
@@ -46,7 +44,14 @@ Rect ConcavePolygon::getAABB() const
 
     Vector2D center((xMin + xMax) * 0.5f, (yMin + yMax) * 0.5f);
 
-    return { center, (xMax - xMin) * 0.5f, (yMax - yMin) * 0.5f };
+    m_AABB = { center, (xMax - xMin) * 0.5f, (yMax - yMin) * 0.5f };
+
+    return m_AABB;
+}
+
+float randomNumber(float min, float max)
+{
+    return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
 }
 
 float clamp(float value, float a, float b)
@@ -55,7 +60,7 @@ float clamp(float value, float a, float b)
     return value < minimum ? minimum : value > maximum ? maximum : value;
 }
 
-float sign(float value)
+int sign(float value)
 {
     return (value > 0.f) - (value < 0.f);
 }

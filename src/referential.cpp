@@ -13,8 +13,7 @@ Referential2D::Referential2D(const Vector2D& origin, const Vector2D& i)
 
 void Referential2D::rotate(float angle)
 {
-    m_angle = fmod(m_angle + angle, 2 * M_PI);
-
+    m_angle += angle;
     m_i.rotate(angle);
     m_j.rotate(angle);
 }

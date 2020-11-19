@@ -26,10 +26,10 @@ float dot(const Vector2D& vect1, const Vector2D& vect2)
 
 Vector2D Vector2D::normalized() const
 {
-    float magn = magnitude();
-
-    if (!magn)
+    if (x == 0 && y == 0)
         return *this;
+
+    float magn = magnitude();
 
     return { x / magn, y / magn };
 }
@@ -131,15 +131,6 @@ float sqrDistance(const Vector2D& point, const Line& line)
 
 float angle(const Vector2D& vect1, const Vector2D& vect2)
 {
-    /*float magn = vect1.magnitude() * vect2.magnitude();
-
-    if (magn == 0)
-        return 0.f;
-
-    float crossProd = vect1.x * vect2.y - vect1.y * vect2.x;
-
-    return (crossProd < 0.f) ? (2.f * M_PI - acos(dot(vect1, vect2) / magn)) : (acos(dot(vect1, vect2) / magn));*/
-
     float dotProd = dot(vect1, vect2);
     float crossProd = (vect1.x * vect2.y) - (vect1.y * vect2.x);
     return atan2f(crossProd, dotProd);
@@ -153,9 +144,6 @@ Vector2D& Vector2D::rotate(float angle)
 
     x = cos * temp_vect.x - sin * temp_vect.y;
     y = sin * temp_vect.x + cos * temp_vect.y;
-
-    // Keep the vector with a correct magnitude
-    *this = normalized() * temp_vect.magnitude();
 
     return *this;
 }

@@ -5,8 +5,9 @@
 class FireballMine : public Mine
 {
 	private:
-		void createCollider(int size = 1) override;
+		void createCollider(float size = 1.f) override;
 
 	public:
-		FireballMine(const Referential2D& referential);
+		FireballMine(int size = 2);
+		void atDestroy() override;
 };

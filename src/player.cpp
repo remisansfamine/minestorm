@@ -1,6 +1,5 @@
 #include "player.h"
 
-#include <raylib.h>
 
 #include "entity_manager.h"
 
@@ -8,41 +7,51 @@
 
 #include "mine.h"
 
-#include <iostream>
+#include "game.h"
 
-void Player::createCollider()
+void Player::createCollider(float size)
 {
 	ConvexPolygon firstTriangle;
 	firstTriangle.pts =
 	{
-		{ 0.f, -70.f * m_size },
-		{ -50.f * m_size, 77.f * m_size },
-		{ 0.f, 66.f * m_size },
+		{ 0.f, -70.f * size },
+		{ -50.f * size, 77.f * size },
+		{ 0.f, 66.f * size },
 	};
 
 	ConvexPolygon secondTriangle;
 	secondTriangle.pts =
 	{
-		{ 0.f, 66.f * 0.5f },
-		{ 50.f * 0.5f, 77.f * 0.5f },
-		{ 0.f, -70.f * 0.5f },
+		{ 0.f, 66.f * size },
+		{ 50.f * size, 77.f * size },
+		{ 0.f, -70.f * size },
 	};
 
 	m_collider.polygon = { firstTriangle, secondTriangle };
 }
 
-Player::Player(int index, const Input& input, const Referential2D& referential)
-	: m_input(input), Entity(referential)
+Player::Player(int index, const Input& input, const Referential2D& referential, Color color)
+	: m_index(index), m_input(input), Entity(referential)
 {
+	m_size = 0.5f;
+
 	m_srcRect = { 0, 0, 256, 256 };
+
+	m_rotationSpeed = 2.5f;
 
 	m_translationSpeed = 10000.f;
 
-	m_color = index ? LIME : BLUE;
+	m_color = color;
 
-	createCollider();
+	createCollider(0.25f * m_size + 0.25f);
 
-	m_entityManager->m_player.push_back(*this);
+	entityManager->m_player.push_back(*this);
+}
+
+Player::~Player()
+{
+	if (entityManager->m_player.size() == 1)
+		Game::m_gameState = GameState::GAMEOVER;
 }
 
 void Player::update(float deltaTime)
@@ -50,8 +59,8 @@ void Player::update(float deltaTime)
 	if (IsKeyPressed(m_input.m_randomPos1) || IsKeyPressed(m_input.m_randomPos2))
 		randomTeleport();
 
-	if (IsKeyPressed(m_input.m_shoot) && m_entityManager)
-		new Bullet(Referential2D(m_referential.m_origin, m_referential.m_i), m_color);
+	if (IsKeyPressed(m_input.m_shoot) && entityManager)
+		Bullet(m_referential, m_color, this);
 
 	int yAxis = IsKeyDown(m_input.m_right) - IsKeyDown(m_input.m_left);
 
@@ -60,57 +69,69 @@ void Player::update(float deltaTime)
 
 	move(deltaTime);
 
-	ConcavePolygon playerPolygonGlobal = m_referential.concaveToGlobal(m_collider);
-	Rect playerAABB = playerPolygonGlobal.getAABB();
+	checkCollision();
+}
 
-	for (Mine* mine : m_entityManager->m_mine)
+void Player::checkCollision()
+{
+	ConcavePolygon playerPolygonGlobal = m_referential.concaveToGlobal(m_collider);
+	playerPolygonGlobal.getAABB();
+
+	for (Mine* mine : entityManager->m_mine)
 	{
-		if (!mine)
+		if (!mine || mine->m_shouldBeDestroyed)
 			continue;
 
 		ConcavePolygon minePolygonGlobal = mine->m_referential.concaveToGlobal(mine->m_collider);
-		Rect mineAABB = minePolygonGlobal.getAABB();
+		minePolygonGlobal.getAABB();
 
-		if (intersect(playerAABB, mineAABB))
+		if (intersect(playerPolygonGlobal, minePolygonGlobal))
 		{
-			for (const ConvexPolygon& playerPolygon : playerPolygonGlobal.polygon)
-			{
-				playerAABB = playerPolygon.getAABB();
+			hurt();
 
-				for (const ConvexPolygon& minePolygon : minePolygonGlobal.polygon)
-				{
-					mineAABB = minePolygon.getAABB();
+			mine->atDestroy();
 
-					if (intersect(playerAABB, mineAABB))
-					{
-						if (intersect(playerPolygon, minePolygon))
-						{
-							m_shouldBeDestroyed = mine->m_shouldBeDestroyed = true;
-							break;
-						}
-					}
-				}
-			}
+			return;
 		}
 	}
 }
 
 void Player::randomTeleport()
 {
-	Image screenData = GetScreenData();
+	bool isValid = true;
+	float x, y;
+	do
+	{
+		isValid = true;
 
-	m_referential.m_origin.x = (float)rand() / (float)RAND_MAX * screenData.width;
-	m_referential.m_origin.y = (float)rand() / (float)RAND_MAX * screenData.height;
+		x = (float)rand() / (float)RAND_MAX * screenBorder.halfWidth * 2.f;
+		y = (float)rand() / (float)RAND_MAX * screenBorder.halfHeight * 2.f;
+
+		Referential2D newRef = m_referential;
+		newRef.m_origin = Vector2D(x, y);
+
+		ConcavePolygon playerGlobal = newRef.concaveToGlobal(m_collider);
+		playerGlobal.getAABB();
+
+		for (Mine* mine : entityManager->m_mine)
+		{
+			ConcavePolygon mineGlobal = mine->m_referential.concaveToGlobal(mine->m_collider);
+			mineGlobal.getAABB();
+
+			if (intersect(playerGlobal.getAABB(), mineGlobal.getAABB()))
+				isValid = false;
+		}
+	}
+	while (!isValid);
+
+	m_referential.m_origin = Vector2D(x, y);
 }
 
 void Player::move(float deltaTime)
-{
+{	
 	if (IsKeyDown(m_input.m_forward))
-		m_thrust = -m_referential.m_j;
-	else
-		m_thrust = Vector2D(0.f, 0.f);
-
-	m_acceleration = m_thrust / m_mass * m_translationSpeed;
+		m_acceleration = -m_referential.m_j / m_mass * m_translationSpeed;
+	else m_acceleration = Vector2D(0, 0);
 
 	m_speed += m_acceleration * deltaTime;
 
@@ -163,15 +184,21 @@ void Player::drawDebug() const
 						   convexAABB.halfHeight * 2.f,
 						   BLUE);
 
-		for (unsigned int i = 0; i < polygon.pts.size(); i++)
+		for (int i = 0; i < polygon.pts.size(); i++)
 		{
-			unsigned int j = (i + 1) % polygon.pts.size();
+			int j = (i + 1) % polygon.pts.size();
 
 			Vector2D point0 = polygon.pts[i];
 			Vector2D point1 = polygon.pts[j];
 
-			DrawCircle(point0.x, point0.y, 2, BLACK);
 			DrawLine(point0.x, point0.y, point1.x, point1.y, ORANGE);
+			DrawCircle(point0.x, point0.y, 2, BLACK);
 		}
 	}
+}
+
+void Player::hurt()
+{
+	if (--m_life <= 0)
+		m_shouldBeDestroyed = true;
 }

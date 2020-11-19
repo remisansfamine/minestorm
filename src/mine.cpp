@@ -2,20 +2,36 @@
 
 #include <iostream>
 
+#include "spawn_point.h"
+
 #include "entity_manager.h"
 
-Mine::Mine(const Referential2D& referential)
-	: Entity(referential)
+Mine::Mine()
 {
-	m_entityManager->m_mine.push_back(this);
+	m_rotationSpeed = 2.5f;
 
+	m_color = RED;
 
+	SpawnPoint* spawn;
+	do
+	{
+		spawn = &entityManager->m_spawnPoint.at(rand() % entityManager->m_spawnPoint.size());
+	} while (!spawn->m_isAvailable && !spawn->m_shouldBeDestroyed && !spawn->m_isReserved);
+
+	float x = randomNumber(-1.f, 1.f);
+	float y = randomNumber(-1.f, 1.f);
+
+	m_referential = Referential2D(spawn->m_referential.m_origin, Vector2D(x, y));
+
+	spawn->m_shouldBeDestroyed = true;
+
+	entityManager->m_mine.push_back(this);
 }
 
 void Mine::update(float deltaTime)
 {
-	move(deltaTime);
-	rotate(deltaTime);
+	//move(deltaTime);
+	//rotate(deltaTime);
 }
 
 void Mine::move(float deltaTime)
@@ -39,10 +55,10 @@ void Mine::drawDebug() const
 	Rect concaveAABB = polygonGlobal.getAABB();
 
 	DrawRectangleLines(concaveAABB.pt.x - concaveAABB.halfWidth,
-		concaveAABB.pt.y - concaveAABB.halfHeight,
-		concaveAABB.halfWidth * 2.f,
-		concaveAABB.halfHeight * 2.f,
-		PINK);
+					   concaveAABB.pt.y - concaveAABB.halfHeight,
+					   concaveAABB.halfWidth * 2.f,
+					   concaveAABB.halfHeight * 2.f,
+					   PINK);
 
 	for (const ConvexPolygon& polygon : polygonGlobal.polygon)
 	{
@@ -54,9 +70,9 @@ void Mine::drawDebug() const
 			convexAABB.halfHeight * 2.f,
 			BLUE);
 
-		for (unsigned int i = 0; i < polygon.pts.size(); i++)
+		for (int i = 0; i < polygon.pts.size(); i++)
 		{
-			unsigned int j = (i + 1) % polygon.pts.size();
+			int j = (i + 1) % polygon.pts.size();
 
 			Vector2D point0 = polygon.pts[i];
 			Vector2D point1 = polygon.pts[j];
