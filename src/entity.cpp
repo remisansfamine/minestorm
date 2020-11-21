@@ -11,20 +11,23 @@ Entity::Entity(const Referential2D& referential)
 	
 void Entity::stayInScreen()
 {
-	if (m_referential.m_origin.x < 62)
+	int offset = 10;
+	if (m_referential.m_origin.x < 62 - offset)
 		m_referential.m_origin.x = 580;
-	else if (m_referential.m_origin.x > 580)
+
+	else if (m_referential.m_origin.x > 580 + offset)
 		m_referential.m_origin.x = 62;
 
-	if (m_referential.m_origin.y < 62)
+	if (m_referential.m_origin.y < 62 - offset)
 		m_referential.m_origin.y = 710;
-	else if (m_referential.m_origin.y > 710)
+
+	else if (m_referential.m_origin.y > 710 + offset)
 		m_referential.m_origin.y = 64;
 }
 
 void Entity::draw(const Texture2D& spriteSheet) const
 {
-	float textureSize = 256.f * (0.25f * m_size + 0.25f);
+	float textureSize = 256.f * (0.15f * m_size + 0.15f);
 	Vector2 origin =  Vector2D(0.5f, 0.5f) * textureSize;
 	Rectangle destRect = { m_referential.m_origin.x, m_referential.m_origin.y, textureSize, textureSize };
 	DrawTexturePro(spriteSheet, m_srcRect, destRect, origin, m_referential.m_angle * 180.f / M_PI, m_color);

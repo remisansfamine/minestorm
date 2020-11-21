@@ -25,7 +25,6 @@ void Projectile::update(float deltaTime)
 
 	move(deltaTime);
 
-	stayInScreen();
 }
 
 void Projectile::rotate(float deltaTime) { }

@@ -38,6 +38,22 @@ void EntityManager::setPlayerCount(int count)
 	}
 }
 
+void EntityManager::reset()
+{
+	m_wave = 0;
+
+	m_minelayer = Minelayer();
+	m_bullet.clear();
+	m_fireball.clear();
+	m_player.clear();
+	m_spawnPoint.clear();
+
+	for (Mine* mine : m_mine)
+		delete mine;
+
+	m_mine.clear();
+}
+
 EntityManager::~EntityManager()
 {
 	UnloadTexture(m_spriteSheet);
@@ -48,9 +64,11 @@ EntityManager::~EntityManager()
 
 void EntityManager::changeWave()
 {
-	wave++;
+	m_wave++;
 	for (int i = 0; i < 14; i++)
 		SpawnPoint();
+
+	m_minelayer.m_canSpawn = true;
 }
 
 void EntityManager::spawnMine()
@@ -78,10 +96,18 @@ void EntityManager::spawnMine()
 
 void EntityManager::update(float deltaTime)
 {
-	if (m_spawnPoint.size() == 0 && m_mine.size() == 0)
-		changeWave();
+	if (m_spawnPoint.size() == 0)
+	{
+		if (m_mine.size() == 0)
+			changeWave();
+		else if (m_minelayer.m_canSpawn)
+		{
+			m_minelayer.m_isAlive = true;
+			m_minelayer.m_canSpawn = false;
+		}
+	}
 
-	if (areCheckpointAvailable(7))
+	if (areCheckpointAvailable(12))
 		spawnMine();
 
 	for (SpawnPoint& spawnPoint : m_spawnPoint)
@@ -94,13 +120,19 @@ void EntityManager::update(float deltaTime)
 		fireball.update(deltaTime);
 
 	for (Player& player : m_player)
-		player.update(deltaTime);
+	{
+		if (player.m_isAlive)
+			player.update(deltaTime);
+	}
 
 	for (Mine* mine : m_mine)
 	{
 		if (mine && !mine->m_shouldBeDestroyed)
 			mine->update(deltaTime);
 	}
+
+	if (m_minelayer.m_isAlive)
+		m_minelayer.update(deltaTime);
 
 	clear();
 }
@@ -111,11 +143,6 @@ void EntityManager::clear()
 		m_spawnPoint.end(),
 		[](const SpawnPoint& x) { return x.m_shouldBeDestroyed; }),
 		m_spawnPoint.end());
-
-	m_player.erase(std::remove_if(m_player.begin(),
-		m_player.end(),
-		[](const Player& x) { return x.m_shouldBeDestroyed; }),
-		m_player.end());
 
 	m_bullet.erase(std::remove_if(m_bullet.begin(),
 		m_bullet.end(),
@@ -144,7 +171,10 @@ void EntityManager::draw(bool isDebugging) const
 		spawnPoint.draw(m_spriteSheet);
 
 	for (const Player& player : m_player)
-		player.draw(m_spriteSheet);
+	{
+		if (player.m_isAlive)
+			player.draw(m_spriteSheet);
+	}
 
 	for (const Bullet& bullet : m_bullet)
 		bullet.draw(m_spriteSheet);
@@ -155,6 +185,9 @@ void EntityManager::draw(bool isDebugging) const
 	for (const Mine* mine : m_mine)
 		mine->draw(m_spriteSheet);
 
+	if (m_minelayer.m_isAlive)
+		m_minelayer.draw(m_spriteSheet);
+
 	if (isDebugging)
 		drawDebug();
 }
@@ -162,7 +195,10 @@ void EntityManager::draw(bool isDebugging) const
 void EntityManager::drawDebug() const
 {
 	for (const Player& player : m_player)
-		player.drawDebug();
+	{
+		if (player.m_isAlive)
+			player.drawDebug();
+	}
 
 	for (const Bullet& bullet : m_bullet)
 		bullet.drawDebug();
@@ -172,9 +208,12 @@ void EntityManager::drawDebug() const
 
 	for (const Mine* mine : m_mine)
 		mine->drawDebug();
+
+	if (m_minelayer.m_isAlive)
+		m_minelayer.drawDebug();
 }
 
 bool EntityManager::areCheckpointAvailable(int count)
 {
-	return std::count_if(m_spawnPoint.begin(), m_spawnPoint.end(), [](const SpawnPoint& s) { return s.m_isAvailable && !s.m_isReserved; }) >= count;
+	return std::count_if(m_spawnPoint.begin(), m_spawnPoint.end(), [](const SpawnPoint& s) { return s.m_isAvailable && !s.m_isReserved; }) > count;
 }

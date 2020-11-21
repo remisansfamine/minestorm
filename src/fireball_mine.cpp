@@ -60,7 +60,7 @@ FireballMine::FireballMine(int size)
 
 	m_srcRect = { 768, 256, 256, 256 };
 
-	createCollider(0.25f * m_size + 0.25f);
+	createCollider(0.15f * m_size + 0.15f);
 }
 
 void FireballMine::atDestroy()

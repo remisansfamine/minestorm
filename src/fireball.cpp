@@ -36,6 +36,12 @@ void Fireball::update(float deltaTime)
 
 	Circle collider = getCircle();
 
+	if (!intersect(collider, screenBorder))
+	{
+		m_shouldBeDestroyed = true;
+		return;
+	}
+
 	for (Player& player : entityManager->m_player)
 	{
 		ConcavePolygon polygonGlobal = player.m_referential.concaveToGlobal(player.m_collider);

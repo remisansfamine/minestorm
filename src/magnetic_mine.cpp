@@ -54,7 +54,7 @@ MagneticMine::MagneticMine(int size)
 
 	m_srcRect = { 256, 256, 256, 256 };
 
-	createCollider(0.25f * m_size + 0.25f);
+	createCollider(0.15f * m_size + 0.15f);
 }
 
 void MagneticMine::getTarget()
@@ -82,7 +82,14 @@ void MagneticMine::update(float deltaTime)
 	getTarget();
 
 	if (m_target)
-		m_speed = (m_target->m_referential.m_origin - m_referential.m_origin).normalized() * m_translationSpeed;
+	{
+		Vector2D m_direction = (m_target->m_referential.m_origin - m_referential.m_origin);
+
+		m_direction.x *= sign(screenBorder.halfWidth - abs(m_direction.x));
+		m_direction.y *= sign(screenBorder.halfHeight - abs(m_direction.y));
+
+		m_speed = m_direction.normalized() * m_translationSpeed;
+	}
 
 	Mine::update(deltaTime);
 }

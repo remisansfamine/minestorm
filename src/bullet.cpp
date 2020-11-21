@@ -28,6 +28,27 @@ void Bullet::update(float deltaTime)
 
 	Circle collider = getCircle();
 
+	stayInScreen();
+
+	if (entityManager->m_minelayer.m_isAlive)
+	{
+		Minelayer& minelayer = entityManager->m_minelayer;
+		ConcavePolygon polygonGlobal = minelayer.m_referential.concaveToGlobal(minelayer.m_collider);
+		Rect AABB = polygonGlobal.getAABB();
+
+		if (intersect(polygonGlobal, collider))
+		{
+			if (m_owner)
+				m_owner->m_score += minelayer.m_score;
+
+			minelayer.m_isAlive = false;
+
+			m_shouldBeDestroyed = true;
+
+			return;
+		}
+	}
+
 	for (Mine* mine : entityManager->m_mine)
 	{
 		if (!mine || mine->m_shouldBeDestroyed)

@@ -32,6 +32,7 @@ void Game::gameLoop()
                 {
                     if (IsKeyPressed(m_entityManager.m_input[i].m_shoot))
                     {
+                        m_entityManager.reset();
                         m_entityManager.setPlayerCount(i + 1);
                         m_gameState = GameState::INGAME;
                     }
@@ -75,25 +76,31 @@ void Game::draw()
     ClearBackground(RAYWHITE);
 
     m_hud.drawBackground();
+    
 
     switch (m_gameState)
     {
         case GameState::MENU:
             m_hud.drawMenu();
+            m_hud.drawForeground();
             break;
+
         case GameState::INGAME:
             m_entityManager.draw(m_isDebugging);
-            m_hud.drawHUD(m_score);
+            m_hud.drawForeground();
+            m_hud.drawHUD();
             break;
+
         case GameState::GAMEOVER:
-            m_hud.drawGameOver(m_score);
+            m_hud.drawGameOver();
+            m_hud.drawForeground();
             break;
 
         default:
+            m_hud.drawForeground();
             m_hud.drawMenu();
     }
 
-    m_hud.drawForeground();
 
     EndDrawing();
 }
