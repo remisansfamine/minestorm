@@ -61,7 +61,7 @@ MagneticFireballMine::MagneticFireballMine(int size)
 
 	m_srcRect = { 512, 256, 256, 256 };
 
-	createCollider(0.25f * m_size + 0.25f);
+	createCollider(0.15f * m_size + 0.15f);
 }
 
 void MagneticFireballMine::getTarget()
@@ -85,7 +85,17 @@ void MagneticFireballMine::update(float deltaTime)
 	getTarget();
 
 	if (m_target)
-		m_speed = (m_target->m_referential.m_origin - m_referential.m_origin).normalized() * m_translationSpeed;
+	{
+		Vector2D m_direction = (m_target->m_referential.m_origin - m_referential.m_origin);
+
+		if (abs(m_direction.x) > screenBorder.halfWidth)
+			m_direction.x *= -1.f;
+
+		if (abs(m_direction.y) > screenBorder.halfHeight)
+			m_direction.y *= -1.f;
+
+		m_speed = m_direction.normalized() * m_translationSpeed;
+	}
 
 	Mine::update(deltaTime);
 }

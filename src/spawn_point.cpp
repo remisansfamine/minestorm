@@ -2,8 +2,8 @@
 
 #include "entity_manager.h"
 
-SpawnPoint::SpawnPoint()
-	: Entity(Referential2D(screenBorder.pt, Vector2D(1.f, 0.f)))
+SpawnPoint::SpawnPoint(Vector2D pos, bool isAvailable)
+	: m_isAvailable(isAvailable), Entity(Referential2D(pos, Vector2D(1.f, 0.f)))
 {
 	m_size = 0.5f;
 

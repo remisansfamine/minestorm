@@ -6,6 +6,7 @@
 #include "spawn_point.h"
 #include "fireball.h"
 #include "bullet.h"
+#include "minelayer.h"
 
 class Mine;
 class Projectile;
@@ -13,7 +14,7 @@ class Projectile;
 class EntityManager
 {
 	private:
-		int wave = 0;
+		int m_wave = 0;
 
 		Texture2D m_spriteSheet;
 		void drawDebug() const;
@@ -33,8 +34,11 @@ class EntityManager
 		std::vector<Fireball>	m_fireball;
 		std::vector<Bullet>		m_bullet;
 
+		Minelayer m_minelayer;
+
 		void setPlayerCount(int count = 1);
 		void update(float);
 		void draw(bool isDebugging) const;
-		bool areCheckpointAvailable(int count = 1);
+		bool areCheckpointAvailable(int count = 0);
+		void reset();
 };

@@ -47,7 +47,7 @@ FloatingMine::FloatingMine(int size)
 
 	m_speed = -m_referential.m_j * m_translationSpeed;
 
-	createCollider(0.25f * m_size + 0.25f);
+	createCollider(0.15f * m_size + 0.15f);
 }
 
 void FloatingMine::atDestroy()

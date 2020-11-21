@@ -49,6 +49,33 @@ Rect ConcavePolygon::getAABB()
     return m_AABB;
 }
 
+void Rect::drawDebug() const
+{
+    DrawRectangleLines(pt.x - halfWidth,
+        pt.y - halfHeight,
+        halfWidth * 2.f,
+        halfHeight * 2.f,
+        collide ? RED : BLUE);
+}
+
+void ConvexPolygon::drawDebug() const
+{
+    Rect  convexAABB = getAABB();
+
+    convexAABB.drawDebug();
+
+    for (int i = 0; i < pts.size(); i++)
+    {
+        int j = (i + 1) % pts.size();
+
+        Vector2D point0 = pts[i];
+        Vector2D point1 = pts[j];
+
+        DrawLine(point0.x, point0.y, point1.x, point1.y, ORANGE);
+        DrawCircle(point0.x, point0.y, 2, BLACK);
+    }
+}
+
 float randomNumber(float min, float max)
 {
     return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;

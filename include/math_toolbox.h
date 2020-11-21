@@ -74,6 +74,10 @@ struct Rect
     Vector2D pt;
     float halfWidth;
     float halfHeight;
+
+    bool collide = false;
+
+    void drawDebug() const;
 };
 
 struct OrientedRect
@@ -87,6 +91,8 @@ struct ConvexPolygon
     std::vector<Vector2D> pts;
 
     Rect getAABB() const;
+
+    void drawDebug() const;
 };
 
 struct ConcavePolygon

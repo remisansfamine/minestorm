@@ -106,10 +106,16 @@ bool    intersect(const Circle& circle, const Rect& rect)
 
 bool    intersect(const Rect& rect1, const Rect& rect2)
 {
-    return rect1.pt.x + rect1.halfWidth * 2.f > rect2.pt.x &&
-           rect1.pt.x < rect2.pt.x + rect2.halfWidth * 2.f &&
-           rect1.pt.y + rect1.halfHeight * 2.f > rect2.pt.y &&
-           rect1.pt.y < rect2.pt.y + rect2.halfHeight * 2.f;
+    Range range1(rect1.pt.x - rect1.halfWidth, rect1.pt.x + rect1.halfWidth);
+    Range range2(rect2.pt.x - rect2.halfWidth, rect2.pt.x + rect2.halfWidth);
+
+    if (!range1.interfere(range2))
+        return false;
+
+    range1 = Range(rect1.pt.y - rect1.halfHeight, rect1.pt.y + rect1.halfHeight);
+    range2 = Range(rect2.pt.y - rect2.halfHeight, rect2.pt.y + rect2.halfHeight);
+
+    return range1.interfere(range2);
 }
 
 bool    intersect(const ConvexPolygon& convex, const Vector2D& point)
@@ -216,9 +222,7 @@ bool    intersect(const ConvexPolygon& convex, const Circle& circle)
 
 bool intersect(const ConcavePolygon& concave1, const ConcavePolygon& concave2)
 {
-    // TODO: FIX AABBs
-
-    // if (intersect(concave1.m_AABB, concave2.m_AABB))
+    if (intersect(concave1.m_AABB, concave2.m_AABB))
     {
         for (const ConvexPolygon& convex1 : concave1.polygon)
         {
@@ -244,7 +248,6 @@ bool intersect(const ConcavePolygon& concave, const Circle& circle)
 {
     if (intersect(circle, concave.m_AABB))
     {
-        std::cout << "oui" << std::endl;
         for (const ConvexPolygon& polygon : concave.polygon)
         {
             Rect AABB = polygon.getAABB();

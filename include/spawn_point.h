@@ -13,6 +13,6 @@ class SpawnPoint : public Entity
 		bool m_isAvailable = false;
 		bool m_isReserved = false;
 
-		SpawnPoint();
+		SpawnPoint(Vector2D pos = Entity::screenBorder.pt, bool isAvailable = false);
 		void update(float deltaTime) override;
 };
