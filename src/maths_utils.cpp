@@ -18,6 +18,12 @@ float clamp(float value, float a, float b)
     return value < minimum ? minimum : value > maximum ? maximum : value;
 }
 
+// Return -1 or 1
+float randomSign()
+{
+    return ((rand() % 2) * 2.f - 1.f);
+}
+
 // Return a random float in a range
 float randomNumber(float min, float max)
 {
