@@ -54,10 +54,14 @@ Minelayer::Minelayer()
 
 	m_translationSpeed = 60.f * gameDifficulty;
 
+	// Get a random position at the vertical borders of the screen
+	float x = randomSign() * screenBorder.halfWidth;
+	float y = randomNumber(-screenBorder.halfHeight, screenBorder.halfHeight);
+
 	float i_x = randomNumber(-1.f, 1.f);
 	float i_y = randomNumber(-1.f, 1.f);
 
-	m_referential = Referential2D(getRandomPosition(),
+	m_referential = Referential2D(screenBorder.pt + Vector2D(x, y),
 								  Vector2D(i_x, i_y));
 
 	m_target = getRandomPosition();
