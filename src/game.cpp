@@ -10,7 +10,7 @@ Game::Game(int screenWidth, int screenHeight)
 
     srand(time(NULL));
 
-    m_hud.m_player = &m_entityManager.m_player;
+    m_hud.m_player = &m_entityManager.m_players;
 }
 
 Game::~Game()
@@ -20,27 +20,24 @@ Game::~Game()
 
 void Game::gameLoop()
 {
-    while (!WindowShouldClose())
+    // Setting the game loop and updating the game in function of its state
+
+    while (!WindowShouldClose() && m_gameState != GameState::QUIT)
     {
         switch (m_gameState)
         {
             case GameState::MENU:
-                if (IsKeyPressed(KEY_ESCAPE))
-                    break;
+                updateMainMenu();
+                break;
 
-                for (int i = 0; i < 4; i++)
-                {
-                    if (IsKeyPressed(m_entityManager.m_input[i].m_shoot))
-                    {
-                        m_entityManager.reset();
-                        m_entityManager.setPlayerCount(i + 1);
-                        m_gameState = GameState::INGAME;
-                    }
-                }
+            case GameState::PAUSE:
+                updatePauseMenu();
                 break;
+
             case GameState::INGAME:
-                update();
+                updateGame();
                 break;
+
             case GameState::GAMEOVER:
                 if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_SPACE))
                     m_gameState = GameState::MENU;
@@ -54,20 +51,48 @@ void Game::gameLoop()
     }
 }
 
-void Game::update()
+void Game::updateMainMenu()
+{
+    if (IsKeyPressed(KEY_ESCAPE))
+    {
+        m_gameState = GameState::QUIT;
+        return;
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        if (IsKeyPressed(m_entityManager.m_input[i].m_shoot))
+        {
+            m_entityManager.reset();
+            m_entityManager.setPlayerCount(i + 1);
+            m_gameState = GameState::INGAME;
+        }
+    }
+}
+
+void Game::updateGame()
 {
     if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_P))
-        m_isPaused = !m_isPaused;
+    {
+        m_gameState = GameState::PAUSE;
+        return;
+    }
 
     if (IsKeyPressed(KEY_C))
         m_isDebugging = !m_isDebugging;
 
-    if (m_isPaused)
-        return;
-
     float deltaTime = GetFrameTime();
 
     m_entityManager.update(deltaTime);
+}
+
+void Game::updatePauseMenu()
+{
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_P))
+        m_gameState = GameState::INGAME;
+
+    if (IsKeyPressed(KEY_ESCAPE) || IsKeyPressed(KEY_BACKSPACE))
+        m_gameState = GameState::MENU;
 }
 
 void Game::draw()
@@ -76,13 +101,19 @@ void Game::draw()
     ClearBackground(RAYWHITE);
 
     m_hud.drawBackground();
-    
 
     switch (m_gameState)
     {
         case GameState::MENU:
-            m_hud.drawMenu();
+            m_hud.drawMainMenu();
             m_hud.drawForeground();
+            break;
+
+        case GameState::PAUSE:
+            m_entityManager.draw(m_isDebugging);
+            m_hud.drawForeground();
+            m_hud.drawPauseMenu();
+            m_hud.drawHUD();
             break;
 
         case GameState::INGAME:
@@ -98,9 +129,8 @@ void Game::draw()
 
         default:
             m_hud.drawForeground();
-            m_hud.drawMenu();
+            m_hud.drawMainMenu();
     }
-
 
     EndDrawing();
 }

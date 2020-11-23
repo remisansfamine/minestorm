@@ -1,4 +1,6 @@
-#include "math_toolbox.h"
+#include "maths_toolbox.h"
+
+#include "maths_utils.h"
 
 float min(float value1, float value2)
 {
@@ -10,12 +12,14 @@ float max(float value1, float value2)
     return value1 <= value2 ? value2 : value1;
 }
 
+// Return a line made of a segment
 Line::Line(const Segment& segment)
     : pt(segment.pt1), dir((segment.pt2 - segment.pt1).normalized())
 { }
 
 Rect ConvexPolygon::getAABB() const
 {
+    // Get AABB of a convex by comparing each coordinate of each point
     float xMin = FLT_MAX, yMin = FLT_MAX, xMax = FLT_MIN, yMax = FLT_MIN;
     for (const Vector2D& point : pts)
     {
@@ -25,13 +29,16 @@ Rect ConvexPolygon::getAABB() const
         yMax = max(yMax, point.y);
     }
 
+    // Getting the center
     Vector2D center((xMin + xMax) * 0.5f, (yMin + yMax) * 0.5f);
 
+    // Returning the center and the bounds
     return { center, (xMax - xMin) * 0.5f, (yMax - yMin) * 0.5f};
 }
 
 Rect ConcavePolygon::getAABB()
 {
+    // Get AABB of a convex by comparing each AABB of each polygon
     float xMin = FLT_MAX, yMin = FLT_MAX, xMax = FLT_MIN, yMax = FLT_MIN;
     for (const ConvexPolygon& polygon : polygon)
     {
@@ -42,15 +49,19 @@ Rect ConcavePolygon::getAABB()
         yMax = max(yMax, AABB.pt.y + AABB.halfHeight);
     }
 
+    // Getting the center
     Vector2D center((xMin + xMax) * 0.5f, (yMin + yMax) * 0.5f);
 
+    // Setting the AABB in the polygon (to avoid more calculations) with the center and the bounds
     m_AABB = { center, (xMax - xMin) * 0.5f, (yMax - yMin) * 0.5f };
 
+    // Returning the result
     return m_AABB;
 }
 
 void Rect::drawDebug() const
 {
+    // Draw Rect and AABB
     DrawRectangleLines(pt.x - halfWidth,
         pt.y - halfHeight,
         halfWidth * 2.f,
@@ -60,6 +71,7 @@ void Rect::drawDebug() const
 
 void ConvexPolygon::drawDebug() const
 {
+    // Draw each segment of the polygon and its AABB
     Rect  convexAABB = getAABB();
 
     convexAABB.drawDebug();
@@ -78,6 +90,7 @@ void ConvexPolygon::drawDebug() const
 
 float randomNumber(float min, float max)
 {
+    // Get a random number between two floats by getting a range between 0 and 1 and remapping the bounds
     return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
 }
 
@@ -89,5 +102,16 @@ float clamp(float value, float a, float b)
 
 int sign(float value)
 {
+    // Get the sign of a float by substracting the boolean comparaisons
     return (value > 0.f) - (value < 0.f);
+}
+
+float radToDeg()
+{
+    return 180.f / M_PI;
+}
+
+float degToRad()
+{
+    return M_PI / 180.f;
 }

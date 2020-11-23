@@ -4,6 +4,8 @@
 
 void MagneticMine::createCollider(float size)
 {
+	// Set the collider
+
 	ConvexPolygon firstTriangle;
 	firstTriangle.pts =
 	{
@@ -44,29 +46,27 @@ void MagneticMine::createCollider(float size)
 }
 
 MagneticMine::MagneticMine(int size)
-	: Mine()
+	: Mine(size)
 {
-	m_size = size;
-
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 600;
 
-	m_translationSpeed = 60.f / m_size;
+	m_translationSpeed = 60.f / (m_size + 1.f) * gameDifficulty;
 
 	m_srcRect = { 256, 256, 256, 256 };
 
-	createCollider(0.15f * m_size + 0.15f);
+	createCollider(m_size);
 }
 
 void MagneticMine::getTarget()
 {
 
-	if (entityManager->m_player.size() == 0)
+	if (entityManager->m_players.size() == 0)
 	{
 		m_target = nullptr;
 		return;
 	}
 
-	for (Player& player : entityManager->m_player)
+	for (Player& player : entityManager->m_players)
 	{
 		if (!m_target ||
 			distance(m_referential.m_origin, player.m_referential.m_origin)
@@ -82,25 +82,18 @@ void MagneticMine::update(float deltaTime)
 	getTarget();
 
 	if (m_target)
-	{
-		Vector2D m_direction = (m_target->m_referential.m_origin - m_referential.m_origin);
-
-		m_direction.x *= sign(screenBorder.halfWidth - abs(m_direction.x));
-		m_direction.y *= sign(screenBorder.halfHeight - abs(m_direction.y));
-
-		m_speed = m_direction.normalized() * m_translationSpeed;
-	}
+		m_speed = getInScreenDirection(m_target->m_referential.m_origin) * m_translationSpeed;
 
 	Mine::update(deltaTime);
 }
 
 void MagneticMine::atDestroy()
 {
-	m_shouldBeDestroyed = true;
+	m_destroyed = true;
 
-	if (m_size == 0 || !entityManager->areCheckpointAvailable())
+	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new MagneticMine(m_size - 1);
-	new MagneticMine(m_size - 1);
+	new MagneticMine(m_mineSize - 1);
+	new MagneticMine(m_mineSize - 1);
 }

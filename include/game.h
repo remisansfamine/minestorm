@@ -6,29 +6,33 @@
 enum class GameState
 {
 	MENU,
+	PAUSE,
 	INGAME,
-	GAMEOVER
+	GAMEOVER,
+	QUIT
 };
 
 class Game
 {
-	public:
-		Game(int screenWidth, int screenHeight);
-		~Game();
-		void gameLoop();
-
-		static GameState m_gameState;
-
 	private:
 		int m_gameSpeed = 1;
 		int m_score = 0;
 
-		bool m_isPaused = false;
 		bool m_isDebugging = false;
 
 		HUD m_hud;
 		EntityManager m_entityManager;
 
-		void update();
+		void updateGame();
+		void updateMainMenu();
+		void updatePauseMenu();
 		void draw();
+
+	public:
+		Game(int screenWidth, int screenHeight);
+		~Game();
+
+		void gameLoop();
+
+		static GameState m_gameState;
 };

@@ -2,15 +2,15 @@
 
 #include <raylib.h>
 
-#include "math_toolbox.h"
+#include "maths_toolbox.h"
 
 class EntityManager;
 
 class Entity
 {
 	protected:
-		float m_rotationSpeed;
-		float m_translationSpeed;
+		float m_rotationSpeed = 0.f;
+		float m_translationSpeed = 0.f;
 
 		Rectangle m_srcRect = { 0.f, 0.f, 0.f, 0.f };
 
@@ -18,8 +18,11 @@ class Entity
 		virtual void move(float deltaTime) = 0;
 		virtual void rotate(float deltaTime) = 0;
 
+		Vector2D getRandomPosition();
+		Vector2D getInScreenDirection(Vector2D target);
+
 	public:
-		bool m_shouldBeDestroyed = false;
+		bool m_destroyed = false;
 
 		float m_size = 1.f;
 
@@ -40,4 +43,5 @@ class Entity
 
 		static EntityManager* entityManager;
 		static Rect screenBorder;
+		static float gameDifficulty;
 };

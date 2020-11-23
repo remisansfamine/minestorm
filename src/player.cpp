@@ -1,17 +1,21 @@
 #include "player.h"
 
+#include "game.h"
 #include "entity_manager.h"
 
 #include "bullet.h"
 #include "mine.h"
 
-#include "game.h"
-
 #include <algorithm>
 #include <vector>
 
+#include "maths_utils.h"
+#include "intersection.h"
+
 void Player::createCollider(float size)
 {
+	// Set the collider
+
 	ConvexPolygon firstTriangle;
 	firstTriangle.pts =
 	{
@@ -37,7 +41,7 @@ Player::Player(int index, const Input& input, const Referential2D& referential,
 	Color color)
 	: m_index(index), m_input(input), Entity(referential)
 {
-	m_size = 0.5f;
+	m_size = 0.225f;
 
 	m_srcRect = { 0, 0, 256, 256 };
 
@@ -49,7 +53,7 @@ Player::Player(int index, const Input& input, const Referential2D& referential,
 
 	createCollider(0.15f * m_size + 0.15f);
 
-	entityManager->m_player.push_back(*this);
+	entityManager->m_players.push_back(*this);
 }
 
 void Player::update(float deltaTime)
@@ -60,10 +64,7 @@ void Player::update(float deltaTime)
 		randomTeleport();
 
 	if (IsKeyDown(m_input.m_shoot) && entityManager && m_shootCooldown <= 0)
-	{
-		m_shootCooldown = m_fireRate;
-		Bullet(m_referential, m_color, this);
-	}
+		shoot();
 
 	int yAxis = IsKeyDown(m_input.m_right) - IsKeyDown(m_input.m_left);
 
@@ -77,12 +78,14 @@ void Player::update(float deltaTime)
 
 void Player::checkCollision()
 {
+	// Check the collision with each mine
 	ConcavePolygon playerGlobal = m_referential.concaveToGlobal(m_collider);
+
 	playerGlobal.getAABB();
 
-	for (Mine* mine : entityManager->m_mine)
+	for (Mine* mine : entityManager->m_mines)
 	{
-		if (!mine || mine->m_shouldBeDestroyed)
+		if (!mine || mine->m_destroyed)
 			continue;
 
 		ConcavePolygon mineGlobal =mine->m_referential.concaveToGlobal(mine->m_collider);
@@ -91,6 +94,8 @@ void Player::checkCollision()
 
 		if (intersect(playerGlobal, mineGlobal))
 		{
+			// Hurt the player and destroy the mine if there is a collision
+
 			hurt();
 
 			mine->atDestroy();
@@ -100,10 +105,20 @@ void Player::checkCollision()
 	}
 }
 
+void Player::shoot()
+{
+	m_shootCooldown = m_fireRate;
+	Bullet(m_referential, m_color, this);
+}
+
+
 void Player::randomTeleport()
 {
 	bool isValid = true;
 	float x, y;
+
+	// Get a valid position where there is no mine
+
 	do
 	{
 		isValid = true;
@@ -112,14 +127,17 @@ void Player::randomTeleport()
 		y = (float)rand() / (float)RAND_MAX * screenBorder.halfHeight * 2.f;
 
 		Referential2D newRef = m_referential;
+
 		newRef.m_origin = Vector2D(x, y);
 
 		ConcavePolygon playerGlobal = newRef.concaveToGlobal(m_collider);
+
 		playerGlobal.getAABB();
 
-		for (Mine* mine : entityManager->m_mine)
+		for (Mine* mine : entityManager->m_mines)
 		{
 			ConcavePolygon mineGlobal = mine->m_referential.concaveToGlobal(mine->m_collider);
+
 			mineGlobal.getAABB();
 
 			if (intersect(playerGlobal.getAABB(), mineGlobal.getAABB()))
@@ -134,7 +152,8 @@ void Player::move(float deltaTime)
 {
 	if (IsKeyDown(m_input.m_forward))
 		m_acceleration = -m_referential.m_j / m_mass * m_translationSpeed;
-	else m_acceleration = Vector2D(0, 0);
+	else
+		m_acceleration = Vector2D(0, 0);
 
 	m_speed += m_acceleration * deltaTime;
 
@@ -144,7 +163,6 @@ void Player::move(float deltaTime)
 
 		float magnitude = min(localSpeed.magnitude(), m_maxSpeed) * pow(m_friction, deltaTime);
 
-		// TODO: Change sign of y
 		localSpeed.y = min(0, localSpeed.y); // Should put max because y is opposed
 
 		m_speed = m_referential.vectorLocalToGlobal(localSpeed.normalized() * magnitude);
@@ -179,13 +197,16 @@ void Player::drawDebug() const
 
 void Player::hurt()
 {
+	// Decrementing the life of the player
 	if (--m_life <= 0)
 	{
-		m_isAlive = false;
-		if (std::count_if(entityManager->m_player.begin(),
-						  entityManager->m_player.end(),
+		m_destroyed = true;
+
+		// Checking if all player are dead to change the Game State
+		if (std::count_if(entityManager->m_players.begin(),
+						  entityManager->m_players.end(),
 						  [](const Player& p) 
-						  {return p.m_isAlive; }) == 0)
+						  { return !p.m_destroyed; }) == 0)
 			Game::m_gameState = GameState::GAMEOVER;
 	}
 }

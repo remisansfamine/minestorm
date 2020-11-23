@@ -5,18 +5,17 @@
 SpawnPoint::SpawnPoint(Vector2D pos, bool isAvailable)
 	: m_isAvailable(isAvailable), Entity(Referential2D(pos, Vector2D(1.f, 0.f)))
 {
-	m_size = 0.5f;
+	m_size = 0.225f;
 
 	m_srcRect = { 256, 0, 256, 256 };
 
 	m_translationSpeed = 100.f;
 
-	m_target = screenBorder.pt + Vector2D(randomNumber(-screenBorder.halfWidth, screenBorder.halfWidth),
-										  randomNumber(-screenBorder.halfHeight, screenBorder.halfHeight));
+	m_target = getRandomPosition();
 
 	m_color = WHITE;
 
-	entityManager->m_spawnPoint.push_back(*this);
+	entityManager->m_spawnPoints.push_back(*this);
 }
 
 void SpawnPoint::update(float deltaTime)
@@ -26,6 +25,7 @@ void SpawnPoint::update(float deltaTime)
 
 void SpawnPoint::move(float deltaTime)
 {
+	// Checking if the spawnpoint is available (if it is static)
 	if (!m_isAvailable)
 	{
 		if (sqrDistance(m_referential.m_origin, m_target) <= 5.f)
@@ -36,7 +36,4 @@ void SpawnPoint::move(float deltaTime)
 	}
 }
 
-void SpawnPoint::rotate(float deltaTime)
-{
-
-}
+void SpawnPoint::rotate(float deltaTime) { }

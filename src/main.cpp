@@ -10,7 +10,6 @@ int main(int argc, char* argv[])
     InitWindow(screenWidth, screenHeight, "Minestorm - Remi");
 
     Game game(screenWidth, screenHeight);
-
     game.gameLoop();
 
     return 0;

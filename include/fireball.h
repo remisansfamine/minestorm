@@ -2,7 +2,7 @@
 
 #include "projectile.h"
 
-#include "math_toolbox.h"
+#include "maths_toolbox.h"
 
 class Fireball : public Projectile
 {
@@ -10,5 +10,6 @@ class Fireball : public Projectile
 		int m_score = 110;
 
 		Fireball(const Referential2D& referential, Color color);
+
 		void update(float deltaTime) override;
 };

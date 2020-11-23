@@ -1,4 +1,4 @@
-#include "math_toolbox.h"
+#include "maths_toolbox.h"
 
 #include <cmath>
 
@@ -8,9 +8,8 @@ Vector2D::Vector2D(float x, float y)
 Vector2D::Vector2D(Vector2 vect)
     : x(vect.x), y(vect.y) {}
 
-float   Vector2D::magnitude() const
+float Vector2D::magnitude() const
 {
-    // Return the square root of the square magnitude
     return sqrt(sqrMagnitude());
 }
 
@@ -97,7 +96,7 @@ Vector2D& Vector2D::operator/=(float scale)
 
 bool Vector2D::operator==(const Vector2D& vect) const
 {
-    // Check if the substaction of the vectors is smaller than epsilon
+    // Check if the substraction of the vectors is smaller than epsilon
     return abs(x - vect.x) <= FLT_EPSILON && abs(y - vect.y <= FLT_EPSILON);
 }
 
@@ -114,6 +113,7 @@ float distance(const Vector2D& point1, const Vector2D& point2)
 float distance(const Vector2D& point, const Line& line)
 {
     Vector2D AP = point - line.pt;
+
     return (AP - line.dir * dot(AP, line.dir)).magnitude();
 }
 
@@ -126,6 +126,7 @@ float sqrDistance(const Vector2D& point, const Line& line)
 {
     Vector2D dir = line.dir.normalized();
     Vector2D AP = point - line.pt;
+
     return (AP - dir * dot(AP, dir)).sqrMagnitude();
 }
 
@@ -133,17 +134,18 @@ float angle(const Vector2D& vect1, const Vector2D& vect2)
 {
     float dotProd = dot(vect1, vect2);
     float crossProd = (vect1.x * vect2.y) - (vect1.y * vect2.x);
+
     return atan2f(crossProd, dotProd);
 }
 
 Vector2D& Vector2D::rotate(float angle)
 {
-    Vector2D temp_vect = *this;
+    float tempX = x;
 
     float cos = cosf(angle), sin = sinf(angle);
 
-    x = cos * temp_vect.x - sin * temp_vect.y;
-    y = sin * temp_vect.x + cos * temp_vect.y;
+    x = cos * x - sin * y;
+    y = sin * tempX + cos * y;
 
     return *this;
 }
@@ -176,5 +178,6 @@ Vector2D& Vector2D::rotateAround(const Vector2D& center, float angle)
 
 Vector2D Segment::normal()
 {
+    // Get the normal of a segment by getting the normal of its direction vector 
     return (pt2 - pt1).normal();
 }

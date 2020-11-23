@@ -4,6 +4,8 @@
 
 void FloatingMine::createCollider(float size)
 {
+	// Set the collider
+
 	ConvexPolygon firstTriangle;
 	firstTriangle.pts =
 	{
@@ -35,28 +37,26 @@ void FloatingMine::createCollider(float size)
 }
 
 FloatingMine::FloatingMine(int size)
-	: Mine()
+	: Mine(size)
 {
-	m_size = size;
-	
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 200;
 
-	m_translationSpeed = 60.f / m_size;
+	m_translationSpeed = 60.f / (m_size + 1.f) * gameDifficulty;
 
 	m_srcRect = { 0, 256, 256, 256 };
 
 	m_speed = -m_referential.m_j * m_translationSpeed;
 
-	createCollider(0.15f * m_size + 0.15f);
+	createCollider(m_size);
 }
 
 void FloatingMine::atDestroy()
 {
-	m_shouldBeDestroyed = true;
+	m_destroyed = true;
 
-	if (m_size == 0 || !entityManager->areCheckpointAvailable())
+	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new FloatingMine(m_size - 1);
-	new FloatingMine(m_size - 1);
+	new FloatingMine(m_mineSize - 1);
+	new FloatingMine(m_mineSize - 1);
 }

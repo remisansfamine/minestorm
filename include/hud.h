@@ -8,21 +8,10 @@ class Player;
 
 class HUD
 {
-	public:
-		HUD();
-		~HUD();
-
-		void drawHUD();
-		void drawMenu();
-		void drawBackground();
-		void drawForeground();
-		void drawGameOver();
-	
-		std::vector<Player>* m_player = nullptr;
-
 	private:
 		int m_screenWidth = 0;
 		int m_screenHeight = 0;
+
 		Texture2D m_bgTexture;
 		Texture2D m_fgTexture;
 
@@ -30,4 +19,18 @@ class HUD
 		void drawPlayer2(float fontSize);
 		void drawPlayer3(float fontSize);
 		void drawPlayer4(float fontSize);
+
+	public:
+		std::vector<Player>* m_player = nullptr;
+
+		HUD();
+		~HUD();
+
+		void drawHUD();
+		void drawMainMenu();
+		void drawBackground();
+		void drawForeground();
+		void drawGameOver();
+		void drawPauseMenu();
+
 };

@@ -1,31 +1,42 @@
 #include "mine.h"
 
-#include <iostream>
-
 #include "spawn_point.h"
 
 #include "entity_manager.h"
 
-Mine::Mine()
+#include "maths_utils.h"
+
+Mine::Mine(int size)
 {
-	entityManager->m_mine.push_back(this);
+	m_mineSize = size;
+
+	m_size = (0.15f * (size + 1.f)) * gameDifficulty;
 
 	m_rotationSpeed = 2.5f;
 
 	m_color = RED;
 
-	SpawnPoint* spawn;
+	// Get a random spawnpoint to spawn at his position
+	int count = entityManager->m_spawnPoints.size();
+	SpawnPoint* spawn = nullptr;
 	do
 	{
-		spawn = &entityManager->m_spawnPoint.at(rand() % entityManager->m_spawnPoint.size());
-	} while (!spawn->m_isAvailable || spawn->m_shouldBeDestroyed || spawn->m_isReserved);
+		spawn = &entityManager->m_spawnPoints.at(rand() % entityManager->m_spawnPoints.size());
+		count--;
+	} while ((!spawn->m_isAvailable || spawn->m_destroyed || spawn->m_isReserved) && count > 0);
 
-	float x = randomNumber(-1.f, 1.f);
-	float y = randomNumber(-1.f, 1.f);
+	if (!spawn)
+		m_destroyed = true;
 
-	m_referential = Referential2D(spawn->m_referential.m_origin, Vector2D(x, y));
+	// Get a random direction vector
+	float i_x = randomNumber(-1.f, 1.f);
+	float i_y = randomNumber(-1.f, 1.f);
 
-	spawn->m_shouldBeDestroyed = true;
+	m_referential = Referential2D(spawn->m_referential.m_origin, Vector2D(i_x, i_y));
+
+	spawn->m_destroyed = true;
+
+	entityManager->m_mines.push_back(this);
 }
 
 void Mine::update(float deltaTime)

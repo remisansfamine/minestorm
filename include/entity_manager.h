@@ -15,8 +15,10 @@ class EntityManager
 {
 	private:
 		int m_wave = 0;
+		int m_mineCount = 2;
 
 		Texture2D m_spriteSheet;
+
 		void drawDebug() const;
 		void clear();
 		void spawnMine();
@@ -28,11 +30,11 @@ class EntityManager
 
 		Input m_input[4];
 
-		std::vector<SpawnPoint> m_spawnPoint;
-		std::vector<Player>		m_player;
-		std::vector<Mine*>		m_mine;
-		std::vector<Fireball>	m_fireball;
-		std::vector<Bullet>		m_bullet;
+		std::vector<SpawnPoint> m_spawnPoints;
+		std::vector<Player>		m_players;
+		std::vector<Mine*>		m_mines;
+		std::vector<Fireball>	m_fireballs;
+		std::vector<Bullet>		m_bullets;
 
 		Minelayer m_minelayer;
 

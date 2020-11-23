@@ -37,7 +37,7 @@ std::string scoreString(int score)
 	return "Score: " + std::to_string(score);
 }
 
-void HUD::drawMenu()
+void HUD::drawMainMenu()
 {
 	float fontSize = 30.f;
 
@@ -46,19 +46,32 @@ void HUD::drawMenu()
 	fontSize = 17.5f;
 	DrawAlignedText("Press 'F':                        Solo Mode", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.5f, fontSize, LIME);
 	DrawAlignedText("Press 'K':             Two players Mode", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.25f, fontSize, BLUE);
-	DrawAlignedText("Press 'DOWN':    Three players Mode", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.f, fontSize, WHITE);
+	DrawAlignedText("Press 'DOWN':    Three players Mode", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.f, fontSize, ORANGE);
 	DrawAlignedText("Press 'Keypad 5': Four players Mode", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 2.75f, fontSize, PINK);
 	DrawAlignedText("Press 'Esc':                   Exit", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 2.5f, fontSize, RED);
 }
 
+void HUD::drawPauseMenu()
+{
+	float fontSize = 30.f;
+
+	DrawAlignedText("PAUSE ||", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 4.25f, fontSize, WHITE);
+
+	fontSize = 17.5f;
+	DrawAlignedText("Press 'SPACE':                             Resume", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.25f, fontSize, BLUE);
+	DrawAlignedText("Press 'Esc' or 'Return':   Back to main menu", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.f, fontSize, RED);
+
+}
+
 void HUD::drawForeground()
 {
-	// Draw foreground
 	DrawTexture(m_fgTexture, 0, 0, WHITE);
 }
 
 void HUD::drawGameOver()
 {
+	// Getting the sum of each player score
+
 	int score = std::accumulate(m_player->begin(),
 								m_player->end(),
 								0, [](int& i, Player& p) { return i + p.m_score; });
@@ -66,6 +79,8 @@ void HUD::drawGameOver()
 	float fontSize = 30.f;
 	DrawAlignedText("GAME OVER", 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.75f, fontSize, WHITE);
 
+
+	// And display it
 	fontSize = 25.f;
 	std::string string = scoreString(score);
 	DrawAlignedText(string.c_str(), 0.5f, m_screenWidth * 0.5f, m_screenHeight / 3.25f, fontSize, GREEN);
@@ -77,8 +92,10 @@ void HUD::drawGameOver()
 
 void HUD::drawPlayer1(float fontSize)
 {
-	if (!m_player->at(0).m_isAlive)
+	if (m_player->at(0).m_destroyed)
 		return;
+
+	DrawRectangle((m_screenWidth - 150.f) * 0.2f, (m_screenHeight - 80.f) * 0.125f, 50, 20, WHITE);
 
 	for (int i = 0; i < m_player->at(0).m_life; i++)
 		DrawCircle(m_screenWidth * 0.2f + 5 * (i * 3 - 4), m_screenHeight * 0.125f, 5, m_player->at(0).m_color);
@@ -96,8 +113,10 @@ void HUD::drawPlayer1(float fontSize)
 
 void HUD::drawPlayer2(float fontSize)
 {
-	if (!m_player->at(1).m_isAlive)
+	if (m_player->at(1).m_destroyed)
 		return;
+
+	DrawRectangle((m_screenWidth - 37.5f) * 0.8f, (m_screenHeight - 80.f) * 0.125f, 50, 20, WHITE);
 
 	for (int i = 0; i < m_player->at(1).m_life; i++)
 		DrawCircle((m_screenWidth * 0.8f + 5 * (i * 3 - 4)), m_screenHeight * 0.125f, 5, m_player->at(1).m_color);
@@ -115,8 +134,10 @@ void HUD::drawPlayer2(float fontSize)
 
 void HUD::drawPlayer3(float fontSize)
 {
-	if (!m_player->at(2).m_isAlive)
+	if (m_player->at(2).m_destroyed)
 		return;
+
+	DrawRectangle((m_screenWidth - 150.f) * 0.2f, m_screenHeight * 0.81f - 10.f, 50, 20, WHITE);
 
 	for (int i = 0; i < m_player->at(2).m_life; i++)
 		DrawCircle(m_screenWidth * 0.2f + 5 * (i * 3 - 4), m_screenHeight * 0.81f, 5, m_player->at(2).m_color);
@@ -134,8 +155,10 @@ void HUD::drawPlayer3(float fontSize)
 
 void HUD::drawPlayer4(float fontSize)
 {
-	if (!m_player->at(3).m_isAlive)
+	if (m_player->at(3).m_destroyed)
 		return;
+
+	DrawRectangle((m_screenWidth - 37.5f) * 0.8f, m_screenHeight * 0.81f - 10.f, 50, 20, WHITE);
 
 	for (int i = 0; i < m_player->at(3).m_life; i++)
 		DrawCircle((m_screenWidth * 0.8f + 5 * (i * 3 - 4)), m_screenHeight * 0.81f, 5, m_player->at(3).m_color);
@@ -172,13 +195,15 @@ void HUD::drawHUD()
 	{
 		std::string keybindString = "Press 'SPACE'\nor 'P' to pause";
 		const char* keybindChar = keybindString.c_str();
-		DrawText(keybindChar, (m_screenWidth - MeasureText(keybindChar, fontSize)) * 0.875f, 715, fontSize, WHITE);
+		DrawText(keybindChar, (m_screenWidth - MeasureText(keybindChar, fontSize)) * 0.875f, 715, fontSize, YELLOW);
 	}
 
 	fontSize = 15.f;
 
 	if (!m_player || m_player->size() == 0)
 		return;
+
+	// For each player display its informations (score, keybinds...)
 
 	// Player 1
 	drawPlayer1(fontSize);

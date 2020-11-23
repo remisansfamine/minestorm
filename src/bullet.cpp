@@ -3,83 +3,106 @@
 #include "entity_manager.h"
 
 #include "mine.h"
-
 #include "player.h"
-
 #include "fireball.h"
 
-#include <iostream>
+#include "intersection.h"
 
 Bullet::Bullet(const Referential2D& referential, Color color, Player* owner)
 	: m_owner(owner), Projectile(referential, color)
 {
+	m_size = 0.225f;
+
 	m_translationSpeed = 500.f;
 
 	m_speed = -m_referential.m_j * m_translationSpeed;
 
-	m_lifeTime = 1.5f;
+	m_lifeTime = 0.9f;
 
-	entityManager->m_bullet.push_back(*this);
+	entityManager->m_bullets.push_back(*this);
 }
 
 void Bullet::update(float deltaTime)
 {
 	Projectile::update(deltaTime);
 
-	Circle collider = getCircle();
+	m_collider = getCircle();
 
 	stayInScreen();
 
-	if (entityManager->m_minelayer.m_isAlive)
+	checkCollisionMinelayer();
+	checkCollisionMine();
+	checkCollisionFireball();
+}
+
+void Bullet::checkCollisionMinelayer()
+{
+	if (m_destroyed)
+		return;
+
+	if (!entityManager->m_minelayer.m_destroyed)
 	{
 		Minelayer& minelayer = entityManager->m_minelayer;
-		ConcavePolygon polygonGlobal = minelayer.m_referential.concaveToGlobal(minelayer.m_collider);
-		Rect AABB = polygonGlobal.getAABB();
+		ConcavePolygon	polygonGlobal = minelayer.m_referential.concaveToGlobal(minelayer.m_collider);
+		Rect			AABB = polygonGlobal.getAABB();
 
-		if (intersect(polygonGlobal, collider))
+		if (intersect(polygonGlobal, m_collider))
 		{
+			// Set the score to the player and destroy the Minelayer and the bullet
 			if (m_owner)
 				m_owner->m_score += minelayer.m_score;
 
-			minelayer.m_isAlive = false;
-
-			m_shouldBeDestroyed = true;
-
-			return;
+			m_destroyed = minelayer.m_destroyed = true;
 		}
 	}
+}
 
-	for (Mine* mine : entityManager->m_mine)
+void Bullet::checkCollisionMine()
+{
+	if (m_destroyed)
+		return;
+
+	for (Mine* mine : entityManager->m_mines)
 	{
-		if (!mine || mine->m_shouldBeDestroyed)
+		if (!mine || mine->m_destroyed)
 			continue;
 
 		ConcavePolygon polygonGlobal = mine->m_referential.concaveToGlobal(mine->m_collider);
 		Rect AABB = polygonGlobal.getAABB();
-		if (intersect(polygonGlobal, collider))
+		if (intersect(polygonGlobal, m_collider))
 		{
+			// Set the score to the player and destroy the mine and the bullet
+
 			if (m_owner)
 				m_owner->m_score += mine->m_score;
 
-			m_shouldBeDestroyed = true;
+			m_destroyed = true;
 
 			mine->atDestroy();
 
 			return;
 		}
 	}
+}
 
-	for (Fireball& fireball : entityManager->m_fireball)
+void Bullet::checkCollisionFireball()
+{
+	if (m_destroyed)
+		return;
+
+	for (Fireball& fireball : entityManager->m_fireballs)
 	{
-		if (fireball.m_shouldBeDestroyed)
+		if (fireball.m_destroyed)
 			continue;
 
-		if (intersect(fireball.getCircle(), collider))
+		if (intersect(fireball.getCircle(), m_collider))
 		{
+			// Set the score to the player and destroy the fireball and the bullet
+
 			if (m_owner)
 				m_owner->m_score += fireball.m_score;
 
-			m_shouldBeDestroyed = fireball.m_shouldBeDestroyed = true;
+			m_destroyed = fireball.m_destroyed = true;
 
 			return;
 		}
