@@ -6,7 +6,7 @@
 
 #include "maths_utils.h"
 
-Mine::Mine(int size)
+Mine::Mine(int size, SpawnPoint* sp)
 {
 	m_mineSize = size;
 
@@ -16,25 +16,23 @@ Mine::Mine(int size)
 
 	m_color = RED;
 
-	// Get a random spawnpoint to spawn at his position
-	int count = entityManager->m_spawnPoints.size();
-	SpawnPoint* spawn = nullptr;
-	do
-	{
-		spawn = &entityManager->m_spawnPoints.at(rand() % entityManager->m_spawnPoints.size());
-		count--;
-	} while ((!spawn->m_isAvailable || spawn->m_destroyed || spawn->m_isReserved) && count > 0);
-
-	if (!spawn)
-		m_destroyed = true;
-
 	// Get a random direction vector
 	float i_x = randomNumber(-1.f, 1.f);
 	float i_y = randomNumber(-1.f, 1.f);
 
-	m_referential = Referential2D(spawn->m_referential.m_origin, Vector2D(i_x, i_y));
+	if (!sp)
+	{
+		// If there is no spawn point assigned
+		// get a random spawnpoint to spawn at its position
+		do
+		{
+			sp = &entityManager->m_spawnPoints.at(rand() % entityManager->m_spawnPoints.size());
+		} while (!sp->m_isAvailable || sp->m_destroyed || !sp->m_isInitial);
+	}
 
-	spawn->m_destroyed = true;
+	m_referential = Referential2D(sp->m_referential.m_origin, Vector2D(i_x, i_y));
+
+	sp->m_destroyed = true;
 
 	entityManager->m_mines.push_back(this);
 }

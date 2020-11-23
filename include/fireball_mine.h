@@ -8,7 +8,7 @@ class FireballMine : public Mine
 		void createCollider(float size = 1.f) override;
 
 	public:
-		FireballMine(int size = 2);
+		FireballMine(SpawnPoint* sp = nullptr, int size = 2);
 
 		void atDestroy() override;
 };

@@ -36,8 +36,8 @@ void FloatingMine::createCollider(float size)
 	m_collider.polygon = { firstTriangle, secondTriangle, thirdTriangle };
 }
 
-FloatingMine::FloatingMine(int size)
-	: Mine(size)
+FloatingMine::FloatingMine(SpawnPoint* sp, int size)
+	: Mine(size, sp)
 {
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 200;
 
@@ -57,6 +57,6 @@ void FloatingMine::atDestroy()
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new FloatingMine(m_mineSize - 1);
-	new FloatingMine(m_mineSize - 1);
+	new FloatingMine(nullptr, m_mineSize - 1);
+	new FloatingMine(nullptr, m_mineSize - 1);
 }

@@ -8,7 +8,7 @@ class FloatingMine : public Mine
 		void createCollider(float size = 1.f) override;
 
 	public:
-		FloatingMine(int size = 2);
+		FloatingMine(SpawnPoint* sp = nullptr, int size = 2);
 
 		void atDestroy() override;
 };

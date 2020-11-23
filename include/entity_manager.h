@@ -21,7 +21,6 @@ class EntityManager
 
 		void drawDebug() const;
 		void clear();
-		void spawnMine();
 		void changeWave();
 
 	public:
@@ -39,7 +38,9 @@ class EntityManager
 		Minelayer m_minelayer;
 
 		void setPlayerCount(int count = 1);
+		void spawnMine(SpawnPoint* sp = nullptr);
 		void update(float);
+		void updateEntities(float deltaTime);
 		void draw(bool isDebugging) const;
 		bool areCheckpointAvailable(int count = 0);
 		void reset();

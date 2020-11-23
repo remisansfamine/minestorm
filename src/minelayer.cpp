@@ -74,7 +74,7 @@ void Minelayer::changeTarget()
 	m_target = getRandomPosition();
 
 	// Create a new spawn point
-	SpawnPoint(m_referential.m_origin, true);
+	SpawnPoint(m_referential.m_origin, false);
 }
 
 void Minelayer::update(float deltaTime)

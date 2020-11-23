@@ -13,7 +13,7 @@ class MagneticFireballMine : public Mine
 		void getTarget();
 
 	public:
-		MagneticFireballMine(int size = 2);
+		MagneticFireballMine(SpawnPoint* sp = nullptr, int size = 2);
 
 		void atDestroy() override;
 		void update(float deltaTime) override;

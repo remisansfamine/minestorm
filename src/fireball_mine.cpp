@@ -47,8 +47,8 @@ void FireballMine::createCollider(float size)
 	m_collider.polygon = { firstTriangle, secondTriangle, thirdTriangle, forthTriangle };
 }
 
-FireballMine::FireballMine(int size)
-	: Mine(size)
+FireballMine::FireballMine(SpawnPoint* sp, int size)
+	: Mine(size, sp)
 {
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 425;
 
@@ -70,6 +70,6 @@ void FireballMine::atDestroy()
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new FireballMine(m_mineSize - 1);
-	new FireballMine(m_mineSize - 1);
+	new FireballMine(nullptr, m_mineSize - 1);
+	new FireballMine(nullptr, m_mineSize - 1);
 }

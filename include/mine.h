@@ -2,6 +2,8 @@
 
 #include "entity.h"
 
+class SpawnPoint;
+
 class Mine : public Entity
 {
 	protected:
@@ -15,7 +17,7 @@ class Mine : public Entity
 		ConcavePolygon m_collider;
 		int m_score = 0.f;
 
-		Mine(int size);
+		Mine(int size, SpawnPoint* sp = nullptr);
 		void update(float deltaTime) override;
 		void drawDebug() const override;
 		virtual void atDestroy() = 0;

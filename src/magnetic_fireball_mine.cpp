@@ -52,8 +52,8 @@ void MagneticFireballMine::createCollider(float size)
 	m_collider.polygon = { firstTriangle, secondTriangle, thirdTriangle, forthTriangle, base };
 }
 
-MagneticFireballMine::MagneticFireballMine(int size)
-	: Mine(size)
+MagneticFireballMine::MagneticFireballMine(SpawnPoint* sp, int size)
+	: Mine(size, sp)
 {
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 850;
 
@@ -74,8 +74,9 @@ void MagneticFireballMine::getTarget()
 
 	for (Player& player : entityManager->m_players)
 	{
-		if (!m_target ||
-			sqrDistance(m_referential.m_origin, player.m_referential.m_origin) < sqrDistance(m_referential.m_origin, m_target->m_referential.m_origin))
+		if ((!m_target ||
+			sqrDistance(m_referential.m_origin, player.m_referential.m_origin)
+			< sqrDistance(m_referential.m_origin, m_target->m_referential.m_origin)) && !player.m_destroyed)
 			m_target = &player;
 	}
 }
@@ -85,9 +86,7 @@ void MagneticFireballMine::update(float deltaTime)
 	getTarget();
 
 	if (m_target)
-	{
 		m_speed = getInScreenDirection(m_target->m_referential.m_origin) * m_translationSpeed;
-	}
 
 	Mine::update(deltaTime);
 }
@@ -101,6 +100,6 @@ void MagneticFireballMine::atDestroy()
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new MagneticFireballMine(m_mineSize - 1);
-	new MagneticFireballMine(m_mineSize - 1);
+	new MagneticFireballMine(nullptr, m_mineSize - 1);
+	new MagneticFireballMine(nullptr, m_mineSize - 1);
 }

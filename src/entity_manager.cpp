@@ -7,6 +7,8 @@
 
 #include <algorithm>
 
+#include <iostream>
+
 EntityManager::EntityManager(int playerCount)
 {
 	// Setting player inputs and entities texture
@@ -40,6 +42,8 @@ void EntityManager::reset()
 {
 	// Clearing each list from its entities and resetting values
 
+	Entity::gameDifficulty = 1.f;
+
 	m_wave = 0;
 
 	m_minelayer = Minelayer();
@@ -66,6 +70,7 @@ EntityManager::~EntityManager()
 
 void EntityManager::changeWave()
 {
+	m_mineCount = m_wave / 4 + 2;
 	m_wave++;
 	for (int i = 0; i < m_mineCount * 7; i++)
 		SpawnPoint();
@@ -73,14 +78,9 @@ void EntityManager::changeWave()
 	Entity::gameDifficulty += 0.1f;
 
 	m_minelayer.m_canSpawn = true;
-
-	if (areCheckpointAvailable(m_mineCount * 7 - m_mineCount))
-		spawnMine();
-
-	//m_mineCount++;
 }
 
-void EntityManager::spawnMine()
+void EntityManager::spawnMine(SpawnPoint* sp)
 {
 	// Get a random type of mine to spawn it by getting a random ID
 
@@ -88,23 +88,23 @@ void EntityManager::spawnMine()
 	switch (type)
 	{
 		case 0:
-			new FloatingMine();
+			new FloatingMine(sp);
 			break;
 
 		case 1:
-			new FireballMine();
+			new FireballMine(sp);
 			break;
 
 		case 2:
-			new MagneticMine();
+			new MagneticMine(sp);
 			break;
 
 		case 3:
-			new MagneticFireballMine();
+			new MagneticFireballMine(sp);
 			break;
 
 		default:
-			new FloatingMine();
+			new FloatingMine(sp);
 	}
 }
 
@@ -118,6 +118,17 @@ void EntityManager::update(float deltaTime)
 			m_minelayer.m_canSpawn = m_minelayer.m_destroyed = false;
 	}
 
+	// Check if there is enough spawnpoint to spawn a mine
+	if (areCheckpointAvailable(m_mineCount * 7 - m_mineCount))
+		spawnMine();
+
+	updateEntities(deltaTime);
+
+	clear();
+}
+
+void EntityManager::updateEntities(float deltaTime)
+{
 	// Update each list
 	for (SpawnPoint& spawnPoint : m_spawnPoints)
 		spawnPoint.update(deltaTime);
@@ -142,8 +153,6 @@ void EntityManager::update(float deltaTime)
 
 	if (!m_minelayer.m_destroyed)
 		m_minelayer.update(deltaTime);
-
-	clear();
 }
 
 void EntityManager::clear()
@@ -230,5 +239,9 @@ void EntityManager::drawDebug() const
 
 bool EntityManager::areCheckpointAvailable(int count)
 {
-	return std::count_if(m_spawnPoints.begin(), m_spawnPoints.end(), [](const SpawnPoint& s) { return s.m_isAvailable && !s.m_isReserved; }) > count;
+	return std::count_if(m_spawnPoints.begin(),
+						 m_spawnPoints.end(),
+						 [](const SpawnPoint& s)
+						 { return s.m_isAvailable && s.m_isInitial; })
+						 > count;
 }

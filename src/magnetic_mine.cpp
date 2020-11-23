@@ -45,8 +45,8 @@ void MagneticMine::createCollider(float size)
 	m_collider.polygon = { firstTriangle, secondTriangle, thirdTriangle, forthTriangle };
 }
 
-MagneticMine::MagneticMine(int size)
-	: Mine(size)
+MagneticMine::MagneticMine(SpawnPoint* sp, int size)
+	: Mine(size, sp)
 {
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 600;
 
@@ -68,9 +68,9 @@ void MagneticMine::getTarget()
 
 	for (Player& player : entityManager->m_players)
 	{
-		if (!m_target ||
-			distance(m_referential.m_origin, player.m_referential.m_origin)
-			< distance(m_referential.m_origin, m_target->m_referential.m_origin))
+		if ((!m_target ||
+			sqrDistance(m_referential.m_origin, player.m_referential.m_origin)
+			< sqrDistance(m_referential.m_origin, m_target->m_referential.m_origin)) && !player.m_destroyed)
 		{
 			m_target = &player;
 		}
@@ -94,6 +94,6 @@ void MagneticMine::atDestroy()
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new MagneticMine(m_mineSize - 1);
-	new MagneticMine(m_mineSize - 1);
+	new MagneticMine(nullptr, m_mineSize - 1);
+	new MagneticMine(nullptr, m_mineSize - 1);
 }
