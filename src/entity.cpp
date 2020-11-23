@@ -17,8 +17,10 @@ Entity::Entity(const Referential2D& referential)
 Vector2D Entity::getRandomPosition()
 {
 	// Get a random position in the screen
-	return screenBorder.pt + Vector2D(randomNumber(-screenBorder.halfWidth + SCREENOFFSET, screenBorder.halfWidth - SCREENOFFSET),
-									  randomNumber(-screenBorder.halfHeight + SCREENOFFSET, screenBorder.halfHeight - SCREENOFFSET));
+	return screenBorder.pt + Vector2D(randomNumber(-screenBorder.halfWidth + SCREENOFFSET,
+													screenBorder.halfWidth - SCREENOFFSET),
+									  randomNumber(-screenBorder.halfHeight + SCREENOFFSET,
+													screenBorder.halfHeight - SCREENOFFSET));
 }
 
 Vector2D Entity::getInScreenDirection(Vector2D target)
@@ -27,11 +29,8 @@ Vector2D Entity::getInScreenDirection(Vector2D target)
 	Vector2D m_direction = target - m_referential.m_origin;
 
 	// Take the shortest path by checking if the passage through the edge of the screen is effective
-	if (abs(m_direction.x) > screenBorder.halfWidth)
-		m_direction.x *= -1.f;
-
-	if (abs(m_direction.y) > screenBorder.halfHeight)
-		m_direction.y *= -1.f;
+	m_direction.x *= sign(screenBorder.halfWidth  - abs(m_direction.x));
+	m_direction.y *= sign(screenBorder.halfHeight - abs(m_direction.y));
 
 	return m_direction.normalized();
 }
@@ -54,10 +53,12 @@ void Entity::stayInScreen()
 void Entity::draw(const Texture2D& spriteSheet) const
 {
 	float textureSize = 256.f * m_size;
-	Vector2 origin =  Vector2D(0.5f, 0.5f) * textureSize;
-	Rectangle destRect = { m_referential.m_origin.x, m_referential.m_origin.y, textureSize, textureSize };
+	Rectangle destRect = { m_referential.m_origin.x, m_referential.m_origin.y,
+						   textureSize, textureSize };
 
-	DrawTexturePro(spriteSheet, m_srcRect, destRect, origin, m_referential.m_angle * radToDeg(), m_color);
+	Vector2 origin = Vector2D(0.5f, 0.5f) * textureSize;
+	float angle = m_referential.m_angle * radToDeg();
+	DrawTexturePro(spriteSheet, m_srcRect, destRect, origin, angle, m_color);
 }
 
 void Entity::drawDebug() const

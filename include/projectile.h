@@ -11,6 +11,8 @@ class Projectile : public Entity
 		void rotate(float deltaTime) override;
 		void move(float deltaTime) override;
 
+		Circle m_collider;
+
 	public:
 		Projectile(const Referential2D& referential, Color color = WHITE);
 

@@ -14,6 +14,8 @@ class Projectile;
 class EntityManager
 {
 	private:
+		float m_waveDisplayTime = 0.f;
+
 		int m_wave = 0;
 		int m_mineCount = 2;
 
@@ -22,6 +24,7 @@ class EntityManager
 		void drawDebug() const;
 		void clear();
 		void changeWave();
+		void displayWave() const;
 
 	public:
 		EntityManager(int playerCount = 2);

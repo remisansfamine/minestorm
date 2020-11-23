@@ -3,6 +3,7 @@
 #include <raylib.h>
 
 #include "maths_toolbox.h"
+#include "referential.h"
 
 class EntityManager;
 

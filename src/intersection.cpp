@@ -6,16 +6,19 @@
 #include <cfloat>
 #include <cmath>
 
+// Not used
 bool intersect(const Vector2D& point1, const Vector2D& point2)
 {
     return (point1 - point2).sqrMagnitude() <= FLT_EPSILON;
 }
 
+// Not used
 bool intersect(const Vector2D& point, const Line& line)
 {
     return sqrDistance(point, line) <= FLT_EPSILON;
 }
 
+// Not used
 bool intersect(const Vector2D& point, const Segment& segment)
 {
     Line line(segment);
@@ -26,6 +29,7 @@ bool intersect(const Vector2D& point, const Segment& segment)
     return Range(segment, line.dir).interfere(Range(point, line.dir));
 }
 
+// Not used
 bool    intersect(const Vector2D& point, const Rect& rect)
 {
     return point.x >= rect.pt.x - rect.halfWidth  &&
@@ -34,6 +38,7 @@ bool    intersect(const Vector2D& point, const Rect& rect)
            point.y <= rect.pt.y + rect.halfHeight;
 }
 
+// Not used
 bool    intersect(const Line& line1, const Line& line2)
 {
     // Intersect
@@ -48,6 +53,7 @@ bool    intersect(const Line& line1, const Line& line2)
     return false;
 }
 
+// Not used
 bool    intersect(const Line& line, const Segment& segment)
 {
     Vector2D normal = line.dir.normal();
@@ -60,6 +66,7 @@ bool    intersect(const Line& line, const Segment& segment)
     return intersect(line, Line(segment));
 }
 
+// Not used
 bool    intersect(const Segment& segment1, const Segment& segment2)
 {
     Line line(segment1);
@@ -71,16 +78,19 @@ bool    intersect(const Segment& segment1, const Segment& segment2)
     return Range(segment1, line.dir).interfere(Range(segment2, line.dir));
 }
 
+// Not used
 bool    intersect(const Circle& circle, const Vector2D& point)
 {
     return (point - circle.center).sqrMagnitude() <= circle.radius * circle.radius;
 }
 
+// Not used
 bool    intersect(const Circle& circle, const Line& line)
 {
     return sqrDistance(circle.center, line) <= circle.radius * circle.radius;
 }
 
+// Not used
 bool    intersect(const Circle& circle, const Segment& segment)
 {
     Line line(segment);
@@ -94,6 +104,7 @@ bool    intersect(const Circle& circle, const Segment& segment)
     return Range(circle, line.dir).interfere(Range(segment, line.dir));
 }
 
+// Intersection Circle/Circle (used for collisions between projectiles)
 bool    intersect(const Circle& circle1, const Circle& circle2)
 {
     // Checking if the squared distance between the centers of the circles is smaller than their squared radius
@@ -101,6 +112,7 @@ bool    intersect(const Circle& circle1, const Circle& circle2)
            (circle1.radius + circle2.radius) * (circle1.radius + circle2.radius);
 }
 
+// Intersection Rect/Rect (used for collisions between polygon AABBs and projectiles)
 bool    intersect(const Circle& circle, const Rect& rect)
 {
     // Checking if the center of the point is in the rect
@@ -117,22 +129,24 @@ bool    intersect(const Circle& circle, const Rect& rect)
     return sqrDistance(height, circle.center) <= circle.radius * circle.radius;
 }
 
+// Intersection Rect/Rect (used for collisions between AABBs)
 bool    intersect(const Rect& rect1, const Rect& rect2)
 {
     // Comparing the ranges of the rects on the x and the y axis
 
-    Range range1(rect1.pt.x - rect1.halfWidth, rect1.pt.x + rect1.halfWidth);
-    Range range2(rect2.pt.x - rect2.halfWidth, rect2.pt.x + rect2.halfWidth);
+    Range range1(rect1, Vector2D(1.f, 0.f));
+    Range range2(rect2, Vector2D(1.f, 0.f));
 
     if (!range1.interfere(range2))
         return false;
 
-    range1 = Range(rect1.pt.y - rect1.halfHeight, rect1.pt.y + rect1.halfHeight);
-    range2 = Range(rect2.pt.y - rect2.halfHeight, rect2.pt.y + rect2.halfHeight);
+    range1 = Range(rect1, Vector2D(0.f, 1.f));
+    range2 = Range(rect2, Vector2D(0.f, 1.f));
 
     return range1.interfere(range2);
 }
 
+// Not used
 bool    intersect(const ConvexPolygon& convex, const Vector2D& point)
 {
     size_t count = convex.pts.size();
@@ -152,6 +166,7 @@ bool    intersect(const ConvexPolygon& convex, const Vector2D& point)
     return true;
 }
 
+// Intersection Convex Polygon/Convex Polygon (used for collisions between players and mines)
 bool    intersect(const ConvexPolygon& convex1, const ConvexPolygon& convex2)
 {
     size_t count1 = convex1.pts.size();
@@ -186,6 +201,35 @@ bool    intersect(const ConvexPolygon& convex1, const ConvexPolygon& convex2)
     return true;
 }
 
+// Intersection Concave Polygon/Concave Polygon (used for collisions between players and mines)
+bool intersect(const ConcavePolygon& concave1, const ConcavePolygon& concave2)
+{
+    // Checking if concave AABBs intersect
+    if (intersect(concave1.m_AABB, concave2.m_AABB))
+    {
+        for (const ConvexPolygon& convex1 : concave1.polygon)
+        {
+            Rect AABB1 = convex1.getAABB();
+
+            // Checking if convexe AABBs intersect
+            for (const ConvexPolygon& convex2 : concave2.polygon)
+            {
+                Rect AABB2 = convex2.getAABB();
+
+                // Checking if concave polygons intersect
+                if (intersect(AABB1, AABB2))
+                {
+                    if (intersect(convex1, convex2))
+                        return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+// Intersection Convex Polygon/Circle (used for projectiles and mines, minelayer and players)
 bool    intersect(const ConvexPolygon& convex, const Circle& circle)
 {
     size_t count = convex.pts.size();
@@ -223,33 +267,7 @@ bool    intersect(const ConvexPolygon& convex, const Circle& circle)
     return range.interfere(Range(circle, dir));
 }
 
-bool intersect(const ConcavePolygon& concave1, const ConcavePolygon& concave2)
-{
-    // Checking if concave AABBs intersect
-    if (intersect(concave1.m_AABB, concave2.m_AABB))
-    {
-        for (const ConvexPolygon& convex1 : concave1.polygon)
-        {
-            Rect AABB1 = convex1.getAABB();
-
-            // Checking if convexe AABBs intersect
-            for (const ConvexPolygon& convex2 : concave2.polygon)
-            {
-                Rect AABB2 = convex2.getAABB();
-
-                // Checking if concave polygons intersect
-                if (intersect(AABB1, AABB2))
-                {
-                    if (intersect(convex1, convex2))
-                        return true;
-                }
-            }
-        }
-    }
-
-    return false;
-}
-
+// Intersection Concave Polygon/Circle (used for projectiles and mines or minelayer)
 bool intersect(const ConcavePolygon& concave, const Circle& circle)
 {
     // Checking if concave AABB and circle intersect

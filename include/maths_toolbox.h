@@ -50,6 +50,7 @@ struct Segment
     Vector2D normal();
 };
 
+// Not used
 struct Line
 {
     Vector2D pt;
@@ -64,7 +65,6 @@ struct Circle
     float radius;
 };
 
-
 struct Rect
 {
     Vector2D pt;
@@ -76,6 +76,7 @@ struct Rect
     void drawDebug() const;
 };
 
+// Not used
 struct OrientedRect
 {
     Rect rect;
@@ -99,36 +100,12 @@ struct ConcavePolygon
     Rect getAABB();
 };
 
-struct Referential2D
-{
-    Vector2D m_origin = { 0.f, 0.f };
-    Vector2D m_i = { 1.f, 0.f };
-    Vector2D m_j = { 0.f, 1.f };
-    float    m_angle = 0.f;
-
-    Referential2D() = default;
-    Referential2D(const Vector2D& origin, const Vector2D& i = {1.f, 0.f});
-
-    void rotate(float angle);
-
-    Vector2D pointLocalToGlobal(const Vector2D& pointLocal) const;
-    Vector2D pointGlobalToLocal(const Vector2D& pointGlobal) const;
-
-    Vector2D vectorLocalToGlobal(const Vector2D& vectLocal) const;
-    Vector2D vectorGlobalToLocal(const Vector2D& vectGlobal) const;
-
-    ConvexPolygon convexToGlobal(const ConvexPolygon& polygonLocal) const;
-    ConvexPolygon convexToLocal(const ConvexPolygon& polygonGlobal) const;
-
-    ConcavePolygon concaveToGlobal(const ConcavePolygon& polygonLocal) const;
-    ConcavePolygon concaveToLocal(const ConcavePolygon& polygonGlobal) const;
-};
-
 float angle(const Vector2D& vect1, const Vector2D& vect2);
 
 float dot(const Vector2D& vect1, const Vector2D& vect2);
 
 float distance(const Vector2D& point1, const Vector2D& point2);
 float distance(const Vector2D& point, const Line& line);
+
 float sqrDistance(const Vector2D& point1, const Vector2D& point2);
 float sqrDistance(const Vector2D& point, const Line& line);

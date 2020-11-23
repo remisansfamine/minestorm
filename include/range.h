@@ -9,12 +9,12 @@ struct Range
 
     Range() = default;
     Range(float val1, float val2);
-    Range(Vector2D point, Vector2D axis);
-    Range(Segment segment, Vector2D axis);
-    Range(Range range1, Range range2);
-    Range(Rect rect, Vector2D axis);
-    Range(Circle circle, Vector2D axis);
-    Range(ConvexPolygon polygon, Vector2D axis);
+    Range(const Vector2D& point, const Vector2D& axis);
+    Range(const Segment& segment, const Vector2D& axis);
+    Range(const Range& range1, const Range& range2);
+    Range(const Rect& rect, const Vector2D& axis);
+    Range(const Circle& circle, const Vector2D& axis);
+    Range(const ConvexPolygon& polygonconst, const Vector2D& axis);
 
     float minimum(const Range&) const;
     float maximum(const Range&) const;
