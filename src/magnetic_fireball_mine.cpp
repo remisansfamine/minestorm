@@ -55,7 +55,7 @@ void MagneticFireballMine::createCollider(float size)
 MagneticFireballMine::MagneticFireballMine(SpawnPoint* sp, int size)
 	: Mine(size, sp)
 {
-	m_score = 15 * (m_size * m_size) - 80 * m_size + 850;
+	m_score = (15 * size - 80) * size + 850;
 
 	m_translationSpeed = 60.f / (m_size + 1.f) * gameDifficulty;
 

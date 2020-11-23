@@ -12,7 +12,36 @@ float max(float value1, float value2)
     return value1 <= value2 ? value2 : value1;
 }
 
-// Return a line made of a segment
+float clamp(float value, float a, float b)
+{
+    float minimum = min(a, b), maximum = max(a, b);
+    return value < minimum ? minimum : value > maximum ? maximum : value;
+}
+
+// Return a random float in a range
+float randomNumber(float min, float max)
+{
+    // Get a random number between two floats by getting a range between 0 and 1 and remapping the bounds
+    return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
+}
+
+int sign(float value)
+{
+    // Get the sign of a float by substracting the boolean comparaisons
+    return (value > 0.f) - (value < 0.f);
+}
+
+float radToDeg()
+{
+    return 180.f / M_PI;
+}
+
+float degToRad()
+{
+    return M_PI / 180.f;
+}
+
+// Return a line made of a segment (not used)
 Line::Line(const Segment& segment)
     : pt(segment.pt1), dir((segment.pt2 - segment.pt1).normalized())
 { }
@@ -57,61 +86,4 @@ Rect ConcavePolygon::getAABB()
 
     // Returning the result
     return m_AABB;
-}
-
-void Rect::drawDebug() const
-{
-    // Draw Rect and AABB
-    DrawRectangleLines(pt.x - halfWidth,
-        pt.y - halfHeight,
-        halfWidth * 2.f,
-        halfHeight * 2.f,
-        collide ? RED : BLUE);
-}
-
-void ConvexPolygon::drawDebug() const
-{
-    // Draw each segment of the polygon and its AABB
-    Rect  convexAABB = getAABB();
-
-    convexAABB.drawDebug();
-
-    for (int i = 0; i < pts.size(); i++)
-    {
-        int j = (i + 1) % pts.size();
-
-        Vector2D point0 = pts[i];
-        Vector2D point1 = pts[j];
-
-        DrawLine(point0.x, point0.y, point1.x, point1.y, ORANGE);
-        DrawCircle(point0.x, point0.y, 2, BLACK);
-    }
-}
-
-float randomNumber(float min, float max)
-{
-    // Get a random number between two floats by getting a range between 0 and 1 and remapping the bounds
-    return ((float(rand()) / float(RAND_MAX)) * (max - min)) + min;
-}
-
-float clamp(float value, float a, float b)
-{
-    float minimum = min(a, b), maximum = max(a, b);
-    return value < minimum ? minimum : value > maximum ? maximum : value;
-}
-
-int sign(float value)
-{
-    // Get the sign of a float by substracting the boolean comparaisons
-    return (value > 0.f) - (value < 0.f);
-}
-
-float radToDeg()
-{
-    return 180.f / M_PI;
-}
-
-float degToRad()
-{
-    return M_PI / 180.f;
 }

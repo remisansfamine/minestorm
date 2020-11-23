@@ -39,7 +39,7 @@ void Player::createCollider(float size)
 
 Player::Player(int index, const Input& input, const Referential2D& referential,
 	Color color)
-	: m_index(index), m_input(input), Entity(referential)
+	: m_input(input), Entity(referential)
 {
 	m_size = 0.225f;
 
@@ -51,7 +51,7 @@ Player::Player(int index, const Input& input, const Referential2D& referential,
 
 	m_color = color;
 
-	createCollider(0.15f * m_size + 0.15f);
+	createCollider(m_size);
 
 	entityManager->m_players.push_back(*this);
 }
@@ -73,10 +73,10 @@ void Player::update(float deltaTime)
 
 	move(deltaTime);
 
-	checkCollision();
+	checkCollisionMine();
 }
 
-void Player::checkCollision()
+void Player::checkCollisionMine()
 {
 	// Check the collision with each mine
 	ConcavePolygon playerGlobal = m_referential.concaveToGlobal(m_collider);
@@ -88,7 +88,7 @@ void Player::checkCollision()
 		if (!mine || mine->m_destroyed)
 			continue;
 
-		ConcavePolygon mineGlobal =mine->m_referential.concaveToGlobal(mine->m_collider);
+		ConcavePolygon mineGlobal = mine->m_referential.concaveToGlobal(mine->m_collider);
 
 		mineGlobal.getAABB();
 
@@ -117,7 +117,8 @@ void Player::randomTeleport()
 	bool isValid = true;
 	float x, y;
 
-	// Get a valid position where there is no mine
+	// Get a valid position where there is no mine by projecting the player collider at a random position
+	// And checking if it collides with a mine
 
 	do
 	{
@@ -150,6 +151,7 @@ void Player::randomTeleport()
 
 void Player::move(float deltaTime)
 {
+	// If the input is pressed set the acceleration with the direction vector
 	if (IsKeyDown(m_input.m_forward))
 		m_acceleration = -m_referential.m_j / m_mass * m_translationSpeed;
 	else
@@ -157,19 +159,21 @@ void Player::move(float deltaTime)
 
 	m_speed += m_acceleration * deltaTime;
 
-	// Clamp speed magnitude and y speed
+	// Clamp speed magnitude and speed.y
 	{
 		Vector2D localSpeed = m_referential.vectorGlobalToLocal(m_speed);
 
+		// Clamping the speed with a maximum speed and adding friction
 		float magnitude = min(localSpeed.magnitude(), m_maxSpeed) * pow(m_friction, deltaTime);
 
-		localSpeed.y = min(0, localSpeed.y); // Should put max because y is opposed
+		// Avoid a negative speed
+		localSpeed.y = min(0, localSpeed.y);
 
 		m_speed = m_referential.vectorLocalToGlobal(localSpeed.normalized() * magnitude);
 	}
 
-	// Rotate the speed vector to let the player drift
-	m_speed.rotate((1 - m_kDrift) * angle(m_speed, -m_referential.m_j) * M_PI / 180.f);
+	// Rotate the speed vector to the direction vector, to let the player drift
+	m_speed.rotate((1 - m_kDrift) * angle(m_speed, -m_referential.m_j) * deltaTime);
 
 	m_referential.m_origin += m_speed * deltaTime;
 
@@ -178,6 +182,7 @@ void Player::move(float deltaTime)
 
 void Player::rotate(float value)
 {
+	// Rotate the entiere referential
 	m_referential.rotate(value * m_rotationSpeed);
 }
 

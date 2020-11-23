@@ -14,8 +14,6 @@ class Bullet : public Projectile
 		void checkCollisionMine();
 		void checkCollisionFireball();
 
-		Circle m_collider;
-
 	public:
 		Bullet(const Referential2D& referential, Color color, Player* owner);
 

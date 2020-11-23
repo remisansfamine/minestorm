@@ -6,22 +6,28 @@
 Range::Range(float val1, float val2)
     : m_min(min(val1, val2)), m_max(max(val1, val2)) { }
 
-Range::Range(Vector2D point, Vector2D axis)
+// Range of a point in an axis
+// (used to get the range of a Convex Polygon, and the range of a Rect 
+// and to check collisions between two Convex Polygons, or a Convex Polygon and a Circle)
+Range::Range(const Vector2D& point, const Vector2D& axis)
 {
     float dotProduct = dot(point, axis.normalized());
     m_min = m_max = dotProduct;
 }
 
-Range::Range(Range range1, Range range2)
+// Not used
+Range::Range(const Range& range1, const Range& range2)
 {
     m_min = min(range1.m_min, range2.m_min);
     m_max = max(range1.m_max, range2.m_max);
 }
 
-Range::Range(Segment segment, Vector2D axis)
+// Not used
+Range::Range(const Segment& segment, const Vector2D& axis)
     : Range(Range(segment.pt1, axis.normalized()), Range(segment.pt2, axis.normalized())) { }
 
-Range::Range(Rect rect, Vector2D axis)
+// Range of a rect in an axis (used to check collisions between Rects)
+Range::Range(const Rect& rect, const Vector2D& axis)
 {
     Vector2D points[4] =
     {
@@ -31,20 +37,22 @@ Range::Range(Rect rect, Vector2D axis)
         {rect.pt.x + rect.halfWidth, rect.pt.y - rect.halfHeight }
     };
 
-    axis.normalize();
+    axis.normalized();
 
     this->Range::Range(Range(Range(points[0], axis), Range(points[1], axis)),
         Range(Range(points[2], axis), Range(points[3], axis)));
 }
 
-Range::Range(Circle circle, Vector2D axis)
+// Range of a circle in an axis (used to check collisions between a Circle and a Convex Polygon)
+Range::Range(const Circle& circle, const Vector2D& axis)
 {
     Vector2D radius = axis * circle.radius;
     Segment diameter = { circle.center - radius, circle.center + radius };
     this->Range::Range(diameter, axis.normalized());
 }
 
-Range::Range(ConvexPolygon polygon, Vector2D axis)
+// Range of a convex polygon in an axis (used to check collisions between a Circle and a Convex Polygon, or two Convex Polygons)
+Range::Range(const ConvexPolygon& polygon, const Vector2D& axis)
     : Range(polygon.pts[0], axis)
 {
     for (int i = 1; i < polygon.pts.size(); i++)

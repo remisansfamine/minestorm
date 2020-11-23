@@ -6,6 +6,10 @@
 
 class Fireball : public Projectile
 {
+	private:
+		void checkCollisionPlayer();
+		void checkCollisionScreenBorder();
+
 	public:
 		int m_score = 110;
 

@@ -50,7 +50,7 @@ void FireballMine::createCollider(float size)
 FireballMine::FireballMine(SpawnPoint* sp, int size)
 	: Mine(size, sp)
 {
-	m_score = 15 * (m_size * m_size) - 80 * m_size + 425;
+	m_score = (15 * size - 80) * size + 425;
 
 	m_translationSpeed = 40.f / (m_size + 1.f) * gameDifficulty;
 

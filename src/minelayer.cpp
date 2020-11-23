@@ -99,7 +99,7 @@ void Minelayer::move(float deltaTime)
 
 void Minelayer::rotate(float deltaTime)
 {
-	m_referential.rotate(angle(m_speed, m_referential.m_j) * m_rotationSpeed * deltaTime );
+	m_referential.rotate(angle(m_speed, m_referential.m_j) * m_rotationSpeed * deltaTime);
 }
 
 void Minelayer::drawDebug() const

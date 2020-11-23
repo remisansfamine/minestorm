@@ -64,6 +64,9 @@
     <ClCompile Include="src\entity.cpp">
       <Filter>src\entities</Filter>
     </ClCompile>
+    <ClCompile Include="src\utils.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\game.h">
@@ -125,6 +128,12 @@
     </ClInclude>
     <ClInclude Include="include\entity.h">
       <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\referential.h">
+      <Filter>include\maths</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

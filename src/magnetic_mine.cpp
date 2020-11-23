@@ -48,7 +48,7 @@ void MagneticMine::createCollider(float size)
 MagneticMine::MagneticMine(SpawnPoint* sp, int size)
 	: Mine(size, sp)
 {
-	m_score = 15 * (m_size * m_size) - 80 * m_size + 600;
+	m_score = (15 * size - 80) * size + 600;
 
 	m_translationSpeed = 60.f / (m_size + 1.f) * gameDifficulty;
 

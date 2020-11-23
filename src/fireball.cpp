@@ -38,27 +38,37 @@ void Fireball::update(float deltaTime)
 {
 	Projectile::update(deltaTime);
 
-	Circle collider = getCircle();
+	m_collider = getCircle();
 
-	if (!intersect(collider, screenBorder))
-	{
+	checkCollisionScreenBorder();
+
+	checkCollisionPlayer();
+}
+
+void Fireball::checkCollisionScreenBorder()
+{
+	if (!intersect(m_collider, screenBorder))
 		m_destroyed = true;
+}
+
+void Fireball::checkCollisionPlayer()
+{
+	if (m_destroyed)
 		return;
-	}
 
 	for (Player& player : entityManager->m_players)
 	{
 		ConcavePolygon polygonGlobal = player.m_referential.concaveToGlobal(player.m_collider);
 		Rect AABB = polygonGlobal.getAABB();
-		if (intersect(collider, AABB))
+		if (intersect(m_collider, AABB))
 		{
 			for (const ConvexPolygon& polygon : polygonGlobal.polygon)
 			{
 				AABB = polygon.getAABB();
 
-				if (intersect(collider, AABB))
+				if (intersect(m_collider, AABB))
 				{
-					if (intersect(polygon, collider))
+					if (intersect(polygon, m_collider))
 					{
 						player.hurt();
 

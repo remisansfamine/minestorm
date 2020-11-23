@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-#include <iostream>
+#include "utils.h"
 
 EntityManager::EntityManager(int playerCount)
 {
@@ -17,6 +17,7 @@ EntityManager::EntityManager(int playerCount)
 
 	m_spriteSheet = LoadTexture("assets/minestorm_sprite_atlas_mine_storm.png");
 
+	// Initialize player inputs
 	m_input[0] = { KEY_R, KEY_D, KEY_G, KEY_F, KEY_E, KEY_T };
 	m_input[1] = { KEY_I, KEY_J, KEY_L, KEY_K, KEY_U, KEY_O };
 	m_input[2] = { KEY_UP, KEY_LEFT, KEY_RIGHT, KEY_DOWN, KEY_RIGHT_CONTROL, KEY_KP_0 };
@@ -27,14 +28,18 @@ void EntityManager::setPlayerCount(int count)
 {
 	// Creating X players with an associeted color
 
-	Color color[4] = { LIME, BLUE, ORANGE, PINK };
+	Color color[4] = { LIME, BLUE, PURPLE, PINK };
+
+	// Get their position in a circle if there is more than one player
+	Vector2D vect = Entity::screenBorder.pt;
+
+	if (count > 1)
+		vect.x += Entity::screenBorder.halfWidth * 0.5f;
 
 	for (int i = 0; i < count; i++)
 	{
-		float x = Entity::screenBorder.pt.x - Entity::screenBorder.halfWidth * 0.5f * powf(-1, i);
-		float y = Entity::screenBorder.pt.y;
-
-		Player(i, m_input[i], Referential2D(Vector2D(x, y)), color[i]);
+		vect.rotateAround(Entity::screenBorder.pt, 2.f * M_PI / count);
+		Player(i, m_input[i], Referential2D(vect), color[i]);
 	}
 }
 
@@ -70,14 +75,20 @@ EntityManager::~EntityManager()
 
 void EntityManager::changeWave()
 {
+	// Increase by one the number of mine at each 4 waves
 	m_mineCount = m_wave / 4 + 2;
+
 	m_wave++;
+
 	for (int i = 0; i < m_mineCount * 7; i++)
 		SpawnPoint();
 
+	// Increase game difficulty (enemies speed and size)
 	Entity::gameDifficulty += 0.1f;
 
 	m_minelayer.m_canSpawn = true;
+
+	m_waveDisplayTime = 3.f;
 }
 
 void EntityManager::spawnMine(SpawnPoint* sp)
@@ -153,6 +164,8 @@ void EntityManager::updateEntities(float deltaTime)
 
 	if (!m_minelayer.m_destroyed)
 		m_minelayer.update(deltaTime);
+
+	m_waveDisplayTime -= deltaTime;
 }
 
 void EntityManager::clear()
@@ -212,6 +225,15 @@ void EntityManager::draw(bool isDebugging) const
 
 	if (isDebugging)
 		drawDebug();
+
+	if (m_waveDisplayTime >= 0.f)
+		displayWave();
+}
+
+void EntityManager::displayWave() const
+{
+	std::string waveString = stringConcatenateInt("Wave ", m_wave);
+	DrawAlignedText(waveString.c_str(), -0.40f, Entity::screenBorder.halfWidth, Entity::screenBorder.halfWidth, 20.f, RED);
 }
 
 void EntityManager::drawDebug() const
