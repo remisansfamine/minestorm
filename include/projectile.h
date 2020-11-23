@@ -6,7 +6,7 @@ class Projectile : public Entity
 {
 	protected:
 		float m_lifeTime;
-		float m_radius = 6.5f;
+		float m_radius = 13.5f;
 
 		void rotate(float deltaTime) override;
 		void move(float deltaTime) override;

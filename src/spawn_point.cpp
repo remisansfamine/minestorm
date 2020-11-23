@@ -2,8 +2,9 @@
 
 #include "entity_manager.h"
 
-SpawnPoint::SpawnPoint(Vector2D pos, bool isAvailable)
-	: m_isAvailable(isAvailable), Entity(Referential2D(pos, Vector2D(1.f, 0.f)))
+SpawnPoint::SpawnPoint(Vector2D pos, bool isInitial)
+	: m_isInitial(isInitial), m_spawnCooldown(isInitial ? 0.f : 0.75f),
+	Entity(Referential2D(pos, Vector2D(1.f, 0.f)))
 {
 	m_size = 0.225f;
 
@@ -16,11 +17,22 @@ SpawnPoint::SpawnPoint(Vector2D pos, bool isAvailable)
 	m_color = WHITE;
 
 	entityManager->m_spawnPoints.push_back(*this);
+
+	m_isAvailable = isInitial;
 }
 
 void SpawnPoint::update(float deltaTime)
 {
-	move(deltaTime);
+	// If the spawn point has been created by the Minelayer
+	if (!m_isInitial)
+	{
+		// Check if it can spawn a mine at its position
+		m_spawnCooldown -= deltaTime;
+		if (m_spawnCooldown < 0.f)
+			entityManager->spawnMine(this);
+	}
+	else
+		move(deltaTime);
 }
 
 void SpawnPoint::move(float deltaTime)
