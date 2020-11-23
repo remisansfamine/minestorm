@@ -7,8 +7,6 @@
 Projectile::Projectile(const Referential2D& referential, Color color)
 	: Entity(referential)
 {
-	m_size = 0.5f;
-
 	m_srcRect = { 768, 0, 256, 256 };
 	m_color = color;
 }
@@ -19,7 +17,7 @@ void Projectile::update(float deltaTime)
 
 	if (m_lifeTime <= 0)
 	{
-		m_shouldBeDestroyed = true;
+		m_destroyed = true;
 		return;
 	}
 

@@ -2,7 +2,7 @@
 
 #include "projectile.h"
 
-#include "math_toolbox.h"
+#include "maths_toolbox.h"
 
 class Player;
 
@@ -10,6 +10,11 @@ class Bullet : public Projectile
 {
 	private:
 		Player* m_owner = nullptr;
+		void checkCollisionMinelayer();
+		void checkCollisionMine();
+		void checkCollisionFireball();
+
+		Circle m_collider;
 
 	public:
 		Bullet(const Referential2D& referential, Color color, Player* owner);

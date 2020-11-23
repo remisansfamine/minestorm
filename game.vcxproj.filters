@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\entity.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\game.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -13,25 +10,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\player.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\entity_manager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\mine.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\floating_mine.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\fireball_mine.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\magnetic_mine.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\magnetic_fireball_mine.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\referential.cpp">
@@ -46,76 +25,106 @@
     <ClCompile Include="src\intersection.cpp">
       <Filter>src\maths</Filter>
     </ClCompile>
+    <ClCompile Include="src\maths_utils.cpp">
+      <Filter>src\maths</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mine.cpp">
+      <Filter>src\entities\mines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\magnetic_fireball_mine.cpp">
+      <Filter>src\entities\mines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\magnetic_mine.cpp">
+      <Filter>src\entities\mines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\floating_mine.cpp">
+      <Filter>src\entities\mines</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fireball_mine.cpp">
+      <Filter>src\entities\mines</Filter>
+    </ClCompile>
     <ClCompile Include="src\projectile.cpp">
-      <Filter>src</Filter>
+      <Filter>src\entities\projectiles</Filter>
     </ClCompile>
     <ClCompile Include="src\bullet.cpp">
-      <Filter>src</Filter>
+      <Filter>src\entities\projectiles</Filter>
     </ClCompile>
     <ClCompile Include="src\fireball.cpp">
-      <Filter>src</Filter>
+      <Filter>src\entities\projectiles</Filter>
     </ClCompile>
-    <ClCompile Include="src\spawn_point.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\player.cpp">
+      <Filter>src\entities</Filter>
     </ClCompile>
     <ClCompile Include="src\minelayer.cpp">
-      <Filter>src</Filter>
+      <Filter>src\entities</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils.cpp">
-      <Filter>src\maths</Filter>
+    <ClCompile Include="src\spawn_point.cpp">
+      <Filter>src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\entity.cpp">
+      <Filter>src\entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\entity.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="include\game.h">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\hud.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\player.h">
+    <ClInclude Include="include\input.h">
       <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\magnetic_mine.h">
+      <Filter>include\entities\mines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\magnetic_fireball_mine.h">
+      <Filter>include\entities\mines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mine.h">
+      <Filter>include\entities\mines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\floating_mine.h">
+      <Filter>include\entities\mines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fireball_mine.h">
+      <Filter>include\entities\mines</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bullet.h">
+      <Filter>include\entities\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fireball.h">
+      <Filter>include\entities\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\projectile.h">
+      <Filter>include\entities\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="include\player.h">
+      <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\spawn_point.h">
+      <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\minelayer.h">
+      <Filter>include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\range.h">
+      <Filter>include\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\intersection.h">
+      <Filter>include\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\maths_utils.h">
+      <Filter>include\maths</Filter>
+    </ClInclude>
+    <ClInclude Include="include\maths_toolbox.h">
+      <Filter>include\maths</Filter>
     </ClInclude>
     <ClInclude Include="include\entity_manager.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="include\mine.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\input.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\fireball_mine.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\magnetic_mine.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\math_toolbox.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\floating_mine.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\magnetic_fireball_mine.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\projectile.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\bullet.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\fireball.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\spawn_point.h">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="include\minelayer.h">
-      <Filter>include</Filter>
+    <ClInclude Include="include\entity.h">
+      <Filter>include\entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +139,27 @@
     </Filter>
     <Filter Include="src\maths">
       <UniqueIdentifier>{282fc356-758c-46c9-a0c9-4e1eff20c731}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities">
+      <UniqueIdentifier>{2c4e690d-154c-49fa-a085-8905aba6d923}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\mines">
+      <UniqueIdentifier>{56ab416b-0cb0-42fd-a640-256fe3568419}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities\projectiles">
+      <UniqueIdentifier>{becedb49-b964-4980-aecd-464ca783f12a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities">
+      <UniqueIdentifier>{7f898ec7-9bc4-4ac5-9005-ebfc0864d98d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities\mines">
+      <UniqueIdentifier>{d4361c47-951f-42c4-8306-76507c527da2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\entities\projectiles">
+      <UniqueIdentifier>{3719bb28-29ea-4c94-b46e-f06e1286af85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\maths">
+      <UniqueIdentifier>{b3d2ac95-5f9b-44b4-ad85-605ec30ec02b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

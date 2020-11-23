@@ -1,13 +1,8 @@
-#include "math_toolbox.h"
-
-#define M_PI 3.14159265358979323846f
-
-#include <iostream>
+#include "maths_toolbox.h"
 
 Referential2D::Referential2D(const Vector2D& origin, const Vector2D& i)
     : m_origin(origin), m_i(i.normalized()), m_j(i.normal())
 {
-    // Does not make any sens
     m_angle = -angle(i, { 1.f, 0.f });
 }
 
@@ -26,6 +21,7 @@ Vector2D Referential2D::pointLocalToGlobal(const Vector2D& pointLocal) const
 Vector2D Referential2D::pointGlobalToLocal(const Vector2D& pointGlobal) const
 {
     Vector2D pos = pointGlobal - m_origin;
+
     return { dot(pos, m_i), dot(pos, m_j) };
 }
 
@@ -41,6 +37,7 @@ Vector2D Referential2D::vectorGlobalToLocal(const Vector2D& vectGlobal) const
 
 ConvexPolygon Referential2D::convexToGlobal(const ConvexPolygon& polygonLocal) const
 {
+    // Return a global convex by returing a new polygon with each point convert in global
     std::vector<Vector2D> points;
     for (const Vector2D& pointLocal : polygonLocal.pts)
         points.push_back(pointLocalToGlobal(pointLocal));
@@ -50,6 +47,8 @@ ConvexPolygon Referential2D::convexToGlobal(const ConvexPolygon& polygonLocal) c
 
 ConvexPolygon Referential2D::convexToLocal(const ConvexPolygon& polygonGlobal) const
 {
+    // Return a local convex by returing a new polygon with each point convert in local
+
     std::vector<Vector2D> points;
     for (const Vector2D& pointGlobal : polygonGlobal.pts)
         points.push_back(pointGlobalToLocal(pointGlobal));
@@ -59,6 +58,8 @@ ConvexPolygon Referential2D::convexToLocal(const ConvexPolygon& polygonGlobal) c
 
 ConcavePolygon Referential2D::concaveToGlobal(const ConcavePolygon& polygonLocal) const
 {
+    // Return a global concave by returing a new concave with each convex convert in global
+
     std::vector<ConvexPolygon> polygon;
     for (const ConvexPolygon& convexLocal : polygonLocal.polygon)
         polygon.push_back(convexToGlobal(convexLocal));
@@ -68,6 +69,8 @@ ConcavePolygon Referential2D::concaveToGlobal(const ConcavePolygon& polygonLocal
 
 ConcavePolygon Referential2D::concaveToLocal(const ConcavePolygon& polygonGlobal) const
 {
+    // Return a local concave by returing a new concave with each convex convert in local
+
     std::vector<ConvexPolygon> polygon;
     for (const ConvexPolygon& convexGlobal : polygonGlobal.polygon)
         polygon.push_back(convexToLocal(convexGlobal));

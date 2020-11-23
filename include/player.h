@@ -6,19 +6,6 @@
 
 class Player : public Entity
 {
-	public:
-		bool m_isAlive = true;
-
-		int m_score = 0;
-		int m_life = 3;
-		int m_index = 0;
-
-		Player(int index, const Input& inputs, const Referential2D& referential, Color color);
-		void update(float) override;
-		void drawDebug() const override;
-		ConcavePolygon m_collider;
-		void hurt();
-
 	private:
 		float m_fireRate = 0.3f;
 		float m_shootCooldown;
@@ -26,6 +13,7 @@ class Player : public Entity
 		float m_maxSpeed = 250.f;
 		float m_mass = 50.f;
 		float m_kDrift = 0.5f;
+
 		Input m_input;
 
 		void createCollider(float size = 1.f);
@@ -33,4 +21,19 @@ class Player : public Entity
 		void rotate(float) override;
 		void randomTeleport();
 		void checkCollision();
+		void shoot();
+
+	public:
+		int m_score = 0;
+		int m_life = 3;
+		int m_index = 0;
+
+		ConcavePolygon m_collider;
+
+		Player(int index, const Input& inputs,
+			   const Referential2D& referential, Color color);
+
+		void update(float) override;
+		void drawDebug() const override;
+		void hurt();
 };

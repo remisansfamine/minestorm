@@ -9,5 +9,6 @@ class FireballMine : public Mine
 
 	public:
 		FireballMine(int size = 2);
+
 		void atDestroy() override;
 };

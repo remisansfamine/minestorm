@@ -9,5 +9,6 @@ class FloatingMine : public Mine
 
 	public:
 		FloatingMine(int size = 2);
+
 		void atDestroy() override;
 };

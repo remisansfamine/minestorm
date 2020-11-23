@@ -6,6 +6,8 @@
 
 void MagneticFireballMine::createCollider(float size)
 {
+	// Set the collider
+
 	ConvexPolygon base;
 	base.pts =
 	{
@@ -51,28 +53,26 @@ void MagneticFireballMine::createCollider(float size)
 }
 
 MagneticFireballMine::MagneticFireballMine(int size)
-	: Mine()
+	: Mine(size)
 {
-	m_size = size;
-
 	m_score = 15 * (m_size * m_size) - 80 * m_size + 850;
 
-	m_translationSpeed = 60.f / m_size;
+	m_translationSpeed = 60.f / (m_size + 1.f) * gameDifficulty;
 
 	m_srcRect = { 512, 256, 256, 256 };
 
-	createCollider(0.15f * m_size + 0.15f);
+	createCollider(m_size);
 }
 
 void MagneticFireballMine::getTarget()
 {
-	if (entityManager->m_player.size() == 0)
+	if (entityManager->m_players.size() == 0)
 	{
 		m_target = nullptr;
 		return;
 	}
 
-	for (Player& player : entityManager->m_player)
+	for (Player& player : entityManager->m_players)
 	{
 		if (!m_target ||
 			sqrDistance(m_referential.m_origin, player.m_referential.m_origin) < sqrDistance(m_referential.m_origin, m_target->m_referential.m_origin))
@@ -86,15 +86,7 @@ void MagneticFireballMine::update(float deltaTime)
 
 	if (m_target)
 	{
-		Vector2D m_direction = (m_target->m_referential.m_origin - m_referential.m_origin);
-
-		if (abs(m_direction.x) > screenBorder.halfWidth)
-			m_direction.x *= -1.f;
-
-		if (abs(m_direction.y) > screenBorder.halfHeight)
-			m_direction.y *= -1.f;
-
-		m_speed = m_direction.normalized() * m_translationSpeed;
+		m_speed = getInScreenDirection(m_target->m_referential.m_origin) * m_translationSpeed;
 	}
 
 	Mine::update(deltaTime);
@@ -104,11 +96,11 @@ void MagneticFireballMine::atDestroy()
 {
 	Fireball(m_referential, ORANGE);
 
-	m_shouldBeDestroyed = true;
+	m_destroyed = true;
 
-	if (m_size == 0 || !entityManager->areCheckpointAvailable())
+	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
 
-	new MagneticFireballMine(m_size - 1);
-	new MagneticFireballMine(m_size - 1);
+	new MagneticFireballMine(m_mineSize - 1);
+	new MagneticFireballMine(m_mineSize - 1);
 }

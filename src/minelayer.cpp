@@ -2,10 +2,12 @@
 
 #include "spawn_point.h"
 
-#include <iostream>
+#include "maths_utils.h"
 
 void Minelayer::createCollider(float size)
 {
+	// Set the collider
+
 	ConvexPolygon firstTriangle;
 	firstTriangle.pts =
 	{
@@ -44,43 +46,42 @@ void Minelayer::createCollider(float size)
 
 Minelayer::Minelayer()
 {
-	m_size = 0.5f;
+	m_size = 0.225f;
 
 	m_srcRect = { 512, 0, 256, 256 };
 
 	m_rotationSpeed = 0.35f;
 
-	m_translationSpeed = 60.f;
-
-	float x = randomNumber(-screenBorder.halfWidth, screenBorder.halfWidth);
-	float y = randomNumber(-screenBorder.halfHeight, screenBorder.halfHeight);
+	m_translationSpeed = 60.f * gameDifficulty;
 
 	float i_x = randomNumber(-1.f, 1.f);
 	float i_y = randomNumber(-1.f, 1.f);
 
-	m_referential = Referential2D(Vector2D(x, y),
+	m_referential = Referential2D(getRandomPosition(),
 								  Vector2D(i_x, i_y));
 
-	m_target = { screenBorder.halfWidth, screenBorder.halfHeight };
+	m_target = getRandomPosition();
 
-	createCollider(0.15f * m_size + 0.15f);
+	m_destroyed = true;
+
+	createCollider(m_size);
 
 	m_color = RED;
 }
 
-Vector2D Minelayer::getTarget()
+void Minelayer::changeTarget()
 {
-	return screenBorder.pt + Vector2D(randomNumber(-screenBorder.halfWidth, screenBorder.halfWidth),
-									  randomNumber(-screenBorder.halfHeight, screenBorder.halfHeight));
+	m_target = getRandomPosition();
+
+	// Create a new spawn point
+	SpawnPoint(m_referential.m_origin, true);
 }
 
 void Minelayer::update(float deltaTime)
 {
+	// Change target if the Minelayer reached its old one
 	if (sqrDistance(m_referential.m_origin, m_target) < 10.f)
-	{
-		m_target = getTarget();
-		SpawnPoint(m_referential.m_origin, true);
-	}
+		changeTarget();
 
 	move(deltaTime);
 
@@ -91,13 +92,7 @@ void Minelayer::update(float deltaTime)
 
 void Minelayer::move(float deltaTime)
 {
-	Vector2D m_direction = (m_target - m_referential.m_origin);
-
-	m_direction.x *= sign(screenBorder.halfWidth - abs(m_direction.x));
-
-	m_direction.y *= sign(screenBorder.halfHeight - abs(m_direction.y));
-
-	m_speed = m_direction.normalized() * m_translationSpeed;
+	m_speed = getInScreenDirection(m_target) * m_translationSpeed;
 
 	m_referential.m_origin += m_speed * deltaTime;
 }

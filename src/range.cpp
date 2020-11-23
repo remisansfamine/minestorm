@@ -1,4 +1,7 @@
-#include "math_toolbox.h"
+#include "maths_toolbox.h"
+#include "maths_utils.h"
+
+#include "range.h"
 
 Range::Range(float val1, float val2)
     : m_min(min(val1, val2)), m_max(max(val1, val2)) { }
@@ -41,6 +44,13 @@ Range::Range(Circle circle, Vector2D axis)
     this->Range::Range(diameter, axis.normalized());
 }
 
+Range::Range(ConvexPolygon polygon, Vector2D axis)
+    : Range(polygon.pts[0], axis)
+{
+    for (int i = 1; i < polygon.pts.size(); i++)
+        merge(Range(polygon.pts[i], axis));
+}
+
 float Range::minimum(const Range& other) const
 {
     return min(m_min, other.m_min);
@@ -60,6 +70,7 @@ Range& Range::merge(const Range& other)
 
 Range& Range::merge(float value)
 {
+    // Merging the ranges by setting the extreme bounds of each range
     m_min = min(m_min, value);
     m_max = max(m_max, value);
     return *this;
@@ -67,5 +78,6 @@ Range& Range::merge(float value)
 
 bool Range::interfere(const Range& other) const
 {
+    // Checking if ranges interfere by comparing their bounds
     return m_min <= other.m_max && other.m_min <= m_max;
 }
