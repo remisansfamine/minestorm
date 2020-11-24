@@ -43,6 +43,9 @@ void Fireball::update(float deltaTime)
 	checkCollisionScreenBorder();
 
 	checkCollisionPlayer();
+
+	if (m_destroyed)
+		createParticle();
 }
 
 void Fireball::checkCollisionScreenBorder()
@@ -60,6 +63,7 @@ void Fireball::checkCollisionPlayer()
 	{
 		ConcavePolygon polygonGlobal = player.m_referential.concaveToGlobal(player.m_collider);
 		Rect AABB = polygonGlobal.getAABB();
+
 		if (intersect(m_collider, AABB))
 		{
 			for (const ConvexPolygon& polygon : polygonGlobal.polygon)

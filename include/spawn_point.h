@@ -5,8 +5,9 @@
 class SpawnPoint : public Entity
 {
 	private:
-		Vector2D m_target;
-		float m_spawnCooldown;
+		float	m_spawnCooldown;
+
+		Vector2D	m_target;
 
 		void move(float) override;
 		void rotate(float) override;

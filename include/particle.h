@@ -18,6 +18,7 @@ class Particle
 	public:
 		bool m_destroyed = false;
 
+		Particle() = default;
 		Particle(const Referential2D& referential, float lifeTime, Color color, const Vector2D& speed = Vector2D(), bool inFront = false);
 
 		void update(float deltaTime);

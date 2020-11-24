@@ -24,7 +24,7 @@ SpawnPoint::SpawnPoint(Vector2D pos, bool isInitial)
 	m_isAvailable = isInitial;
 
 	for (int i = 0; i < 5; i++)
-		Particle(m_referential, 0.005f, WHITE, randomVector() * 20.f, true);
+		Particle(m_referential, 0.005f, WHITE, randomVector() * 20.f);
 }
 
 void SpawnPoint::update(float deltaTime)

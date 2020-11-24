@@ -7,7 +7,7 @@ class SpawnPoint;
 class Mine : public Entity
 {
 	protected:
-		int m_mineSize = 2;
+		int	m_mineSize = 2;
 
 		void move(float) override;
 		void rotate(float) override;
@@ -19,7 +19,6 @@ class Mine : public Entity
 		ConcavePolygon m_collider;
 
 		Mine(int size, SpawnPoint* sp = nullptr);
-		~Mine();
 
 		void update(float deltaTime) override;
 		void drawDebug() const override;

@@ -23,13 +23,6 @@ est propre. Ainsi qu’un nombre de vies, un score et une partie du HUD qui lui 
 
 <br />
 
-Bugs connus:
-===
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Il arrive quelquefois que des particules réapparaissent pour aucune raison.
-</div>
-
-<br />
-
 Contrôles:
 ===
 *Global:*

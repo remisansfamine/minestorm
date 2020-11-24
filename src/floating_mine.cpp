@@ -52,7 +52,7 @@ FloatingMine::FloatingMine(SpawnPoint* sp, int size)
 
 void FloatingMine::atDestroy()
 {
-	m_destroyed = true;
+	Mine::atDestroy();
 
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;

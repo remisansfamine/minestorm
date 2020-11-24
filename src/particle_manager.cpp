@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <iostream>
+
 ParticleManager::ParticleManager()
 {
 	Particle::particleManager = this;
@@ -32,6 +34,8 @@ void ParticleManager::addParticle(const Particle& particle, bool isInFront)
 {
 	if (isInFront)
 	{
+		// Check if an inactive particle exists in the front particles list
+		// If it exists, save the new particle in it 
 		for (Particle& p : m_frontParticles)
 		{
 			if (p.m_destroyed)
@@ -47,6 +51,8 @@ void ParticleManager::addParticle(const Particle& particle, bool isInFront)
 
 	for (Particle& p : m_backParticles)
 	{
+		// Check if an inactive particle exists in the back particles list
+		// If it exists, save the new particle in it 
 		if (p.m_destroyed)
 		{
 			p = particle;
