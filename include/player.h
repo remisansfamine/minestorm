@@ -23,6 +23,8 @@ class Player : public Entity
 		void checkCollisionMine();
 		void shoot();
 
+		Vector2D getAcceleration();
+
 	public:
 		int m_score = 0;
 		int m_life = 3;

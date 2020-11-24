@@ -4,6 +4,7 @@
 
 #include "entity_manager.h"
 
+#include "particle.h"
 #include "maths_utils.h"
 
 Mine::Mine(int size, SpawnPoint* sp)
@@ -16,10 +17,6 @@ Mine::Mine(int size, SpawnPoint* sp)
 
 	m_color = RED;
 
-	// Get a random direction vector
-	float i_x = randomNumber(-1.f, 1.f);
-	float i_y = randomNumber(-1.f, 1.f);
-
 	if (!sp)
 	{
 		// If there is no spawn point assigned
@@ -30,11 +27,21 @@ Mine::Mine(int size, SpawnPoint* sp)
 		} while (!sp->m_isAvailable || sp->m_destroyed || !sp->m_isInitial);
 	}
 
-	m_referential = Referential2D(sp->m_referential.m_origin, Vector2D(i_x, i_y));
+	m_referential = Referential2D(sp->m_referential.m_origin, randomVector());
 
 	sp->m_destroyed = true;
 
+	// Create particles at creation
+	for (int i = 0; i < 5; i++)
+		Particle(m_referential, 0.005f, WHITE, randomVector() * 30.f, true);
+
 	entityManager->m_mines.push_back(this);
+}
+
+Mine::~Mine()
+{
+	for (int i = 0; i < 5; i++)
+		Particle(m_referential, 0.005f, RED, randomVector() * 50.f, true);
 }
 
 void Mine::update(float deltaTime)

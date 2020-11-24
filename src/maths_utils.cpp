@@ -93,3 +93,8 @@ Rect ConcavePolygon::getAABB()
     // Returning the result
     return m_AABB;
 }
+
+Vector2D randomVector()
+{
+    return { randomNumber(-1.f, 1.f), randomNumber(-1.f, 1.f) };
+}

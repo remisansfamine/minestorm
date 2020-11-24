@@ -12,6 +12,8 @@
 #include "maths_utils.h"
 #include "intersection.h"
 
+#include "particle.h"
+
 void Player::createCollider(float size)
 {
 	// Set the collider
@@ -111,9 +113,12 @@ void Player::shoot()
 	Bullet(m_referential, m_color, this);
 }
 
-
 void Player::randomTeleport()
 {
+	// Draw teleportation particles
+	for (int i = 0; i < 25; i++)
+		Particle(m_referential, 0.005f, WHITE, randomVector() * 50.f, true);
+
 	bool isValid = true;
 	float x, y;
 
@@ -147,15 +152,32 @@ void Player::randomTeleport()
 	} while (!isValid);
 
 	m_referential.m_origin = Vector2D(x, y);
+
+	// Draw teleportation particles
+	for (int i = 0; i < 25; i++)
+		Particle(m_referential, 0.005f, WHITE, randomVector() * 50.f, true);
+}
+
+Vector2D Player::getAcceleration()
+{
+	// If the input is pressed set the acceleration with the direction vector
+	if (IsKeyDown(m_input.m_forward))
+	{
+		// Set acceleration in front of the spaceship
+
+		// Create thrust particles
+		for (int i = 0; i < 3; i++)
+			Particle(m_referential, 0.01f, WHITE, randomVector() * 2.f);
+
+		return -m_referential.m_j / m_mass * m_translationSpeed;
+	}
+	
+	return Vector2D();
 }
 
 void Player::move(float deltaTime)
 {
-	// If the input is pressed set the acceleration with the direction vector
-	if (IsKeyDown(m_input.m_forward))
-		m_acceleration = -m_referential.m_j / m_mass * m_translationSpeed;
-	else
-		m_acceleration = Vector2D(0, 0);
+	m_acceleration = getAcceleration();
 
 	m_speed += m_acceleration * deltaTime;
 
@@ -202,10 +224,18 @@ void Player::drawDebug() const
 
 void Player::hurt()
 {
+	// Create death particles
+	for (int i = 0; i < 2; i++)
+		Particle(m_referential, 0.005f, m_color, randomVector() * 50.f, true);
+
 	// Decrementing the life of the player
 	if (--m_life <= 0)
 	{
 		m_destroyed = true;
+
+		// Create death particles
+		for (int i = 0; i < 8; i++)
+			Particle(m_referential, 0.005f, m_color, randomVector() * 50.f, true);
 
 		// Checking if all player are dead to change the Game State
 		if (std::count_if(entityManager->m_players.begin(),

@@ -15,6 +15,7 @@ class Projectile : public Entity
 
 	public:
 		Projectile(const Referential2D& referential, Color color = WHITE);
+		~Projectile();
 
 		void update(float deltaTime) override;
 		void drawDebug() const override;

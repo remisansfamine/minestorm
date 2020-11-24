@@ -8,6 +8,7 @@ float clamp(float value, float min, float max);
 
 float randomSign();
 float randomNumber(float Min, float Max);
+Vector2D randomVector();
 
 int sign(float value);
 

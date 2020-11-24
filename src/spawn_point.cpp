@@ -2,6 +2,9 @@
 
 #include "entity_manager.h"
 
+#include "particle.h"
+#include "maths_utils.h"
+
 SpawnPoint::SpawnPoint(Vector2D pos, bool isInitial)
 	: m_isInitial(isInitial), m_spawnCooldown(isInitial ? 0.f : 0.75f),
 	Entity(Referential2D(pos, Vector2D(1.f, 0.f)))
@@ -19,6 +22,9 @@ SpawnPoint::SpawnPoint(Vector2D pos, bool isInitial)
 	entityManager->m_spawnPoints.push_back(*this);
 
 	m_isAvailable = isInitial;
+
+	for (int i = 0; i < 5; i++)
+		Particle(m_referential, 0.005f, WHITE, randomVector() * 20.f, true);
 }
 
 void SpawnPoint::update(float deltaTime)

@@ -2,6 +2,7 @@
 
 #include "entity_manager.h"
 #include "hud.h"
+#include "particle_manager.h"
 
 enum class GameState
 {
@@ -20,13 +21,16 @@ class Game
 
 		bool m_isDebugging = false;
 
-		HUD m_hud;
-		EntityManager m_entityManager;
+		HUD				m_hud;
+		EntityManager	m_entityManager;
+		ParticleManager m_particleManager;
 
 		void updateGame();
 		void updateMainMenu();
 		void updatePauseMenu();
 		void draw();
+		void drawPause();
+		void drawGame();
 
 	public:
 		Game(int screenWidth, int screenHeight);
