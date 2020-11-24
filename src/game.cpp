@@ -64,6 +64,7 @@ void Game::updateMainMenu()
         if (IsKeyPressed(m_entityManager.m_input[i].m_shoot))
         {
             m_entityManager.reset();
+            m_particleManager.reset();
             m_entityManager.setPlayerCount(i + 1);
             m_gameState = GameState::INGAME;
         }
@@ -84,6 +85,7 @@ void Game::updateGame()
     float deltaTime = GetFrameTime();
 
     m_entityManager.update(deltaTime);
+    m_particleManager.update(deltaTime);
 }
 
 void Game::updatePauseMenu()
@@ -110,16 +112,11 @@ void Game::draw()
             break;
 
         case GameState::PAUSE:
-            m_entityManager.draw(m_isDebugging);
-            m_hud.drawForeground();
-            m_hud.drawPauseMenu();
-            m_hud.drawHUD();
+            drawPause();
             break;
 
         case GameState::INGAME:
-            m_entityManager.draw(m_isDebugging);
-            m_hud.drawForeground();
-            m_hud.drawHUD();
+            drawGame();
             break;
 
         case GameState::GAMEOVER:
@@ -133,4 +130,23 @@ void Game::draw()
     }
 
     EndDrawing();
+}
+
+void Game::drawPause()
+{
+    m_particleManager.drawBack();
+    m_entityManager.draw(m_isDebugging);
+    m_particleManager.drawFront();
+    m_hud.drawForeground();
+    m_hud.drawPauseMenu();
+    m_hud.drawHUD();
+}
+
+void Game::drawGame()
+{
+    m_particleManager.drawBack();
+    m_entityManager.draw(m_isDebugging);
+    m_particleManager.drawFront();
+    m_hud.drawForeground();
+    m_hud.drawHUD();
 }

@@ -4,11 +4,20 @@
 
 #include "mine.h"
 
+#include "particle.h"
+#include "maths_utils.h"
+
 Projectile::Projectile(const Referential2D& referential, Color color)
 	: Entity(referential)
 {
 	m_srcRect = { 768, 0, 256, 256 };
 	m_color = color;
+}
+
+Projectile::~Projectile()
+{
+	for (int i = 0; i < 5; i++)
+		Particle(m_referential, 0.005f, m_color, randomVector() * 30.f, true);
 }
 
 void Projectile::update(float deltaTime)
@@ -22,7 +31,6 @@ void Projectile::update(float deltaTime)
 	}
 
 	move(deltaTime);
-
 }
 
 void Projectile::rotate(float deltaTime) { }

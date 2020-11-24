@@ -8,6 +8,9 @@
 
 #include "intersection.h"
 
+#include "particle.h"
+#include "maths_utils.h"
+
 Bullet::Bullet(const Referential2D& referential, Color color, Player* owner)
 	: m_owner(owner), Projectile(referential, color)
 {
@@ -53,6 +56,9 @@ void Bullet::checkCollisionMinelayer()
 				m_owner->m_score += minelayer.m_score;
 
 			m_destroyed = minelayer.m_destroyed = true;
+
+			for (int i = 0; i < 5; i++)
+				Particle(m_referential, 0.005f, RED, randomVector() * 50.f, true);
 		}
 	}
 }
@@ -79,7 +85,6 @@ void Bullet::checkCollisionMine()
 			m_destroyed = true;
 
 			mine->atDestroy();
-
 			return;
 		}
 	}
@@ -103,7 +108,6 @@ void Bullet::checkCollisionFireball()
 				m_owner->m_score += fireball.m_score;
 
 			m_destroyed = fireball.m_destroyed = true;
-
 			return;
 		}
 	}
