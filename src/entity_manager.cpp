@@ -9,6 +9,8 @@
 
 #include "utils.h"
 
+#include <iostream>
+
 EntityManager::EntityManager(int playerCount)
 {
 	// Setting player inputs and entities texture
@@ -22,6 +24,16 @@ EntityManager::EntityManager(int playerCount)
 	m_input[1] = { KEY_I, KEY_J, KEY_L, KEY_K, KEY_U, KEY_O };
 	m_input[2] = { KEY_UP, KEY_LEFT, KEY_RIGHT, KEY_DOWN, KEY_RIGHT_CONTROL, KEY_KP_0 };
 	m_input[3] = { KEY_KP_8, KEY_KP_4, KEY_KP_6, KEY_KP_5, KEY_KP_7, KEY_KP_9 };
+}
+
+EntityManager::~EntityManager()
+{
+	// Unload textures and free memory
+
+	UnloadTexture(m_spriteSheet);
+
+	for (Mine* mine : m_mines)
+		delete mine;
 }
 
 void EntityManager::setPlayerCount(int count)
@@ -45,6 +57,8 @@ void EntityManager::setPlayerCount(int count)
 
 void EntityManager::reset()
 {
+	m_spawnedMineCount = 0;
+
 	// Clearing each list from its entities and resetting values
 
 	Entity::gameDifficulty = 1.f;
@@ -63,21 +77,13 @@ void EntityManager::reset()
 	m_mines.clear();
 }
 
-EntityManager::~EntityManager()
-{
-	// Unload textures and free memory
-
-	UnloadTexture(m_spriteSheet);
-
-	for (Mine* mine : m_mines)
-		delete mine;
-}
-
 void EntityManager::changeWave()
 {
+	m_spawnedMineCount = 0;
+
 	// Increase by one the number of mine at each 4 waves
 	m_mineCount = m_wave / 4 + 2;
-
+	
 	m_wave++;
 
 	for (int i = 0; i < m_mineCount * 7; i++)
@@ -130,8 +136,11 @@ void EntityManager::update(float deltaTime)
 	}
 
 	// Check if there is enough spawnpoint to spawn a mine
-	if (areCheckpointAvailable(m_mineCount * 7 - m_mineCount))
+	if (areCheckpointAvailable(7) && m_spawnedMineCount < m_mineCount)
+	{
+		m_spawnedMineCount++;
 		spawnMine();
+	}
 
 	updateEntities(deltaTime);
 
