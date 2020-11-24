@@ -25,7 +25,7 @@ est propre. Ainsi qu’un nombre de vies, un score et une partie du HUD qui lui 
 
 Bugs connus:
 ===
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Il arrive quelquefois que les points de spawn ne fassent pas apparaître de mines. Ce qui bloque la partie. Ce problème peut être réglé en relançant une nouvelle partie.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Il arrive quelquefois que des particules réapparaissent pour aucune raison.
 </div>
 
 <br />

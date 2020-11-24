@@ -116,7 +116,7 @@ void Player::shoot()
 void Player::randomTeleport()
 {
 	// Draw teleportation particles
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < 15; i++)
 		Particle(m_referential, 0.005f, WHITE, randomVector() * 50.f, true);
 
 	bool isValid = true;
@@ -154,7 +154,7 @@ void Player::randomTeleport()
 	m_referential.m_origin = Vector2D(x, y);
 
 	// Draw teleportation particles
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < 15; i++)
 		Particle(m_referential, 0.005f, WHITE, randomVector() * 50.f, true);
 }
 

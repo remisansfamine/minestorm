@@ -37,7 +37,6 @@ void ParticleManager::addParticle(const Particle& particle, bool isInFront)
 			if (p.m_destroyed)
 			{
 				p = particle;
-				p.m_destroyed = false;
 				return;
 			}
 		}

@@ -18,6 +18,7 @@ class EntityManager
 
 		int m_wave = 0;
 		int m_mineCount = 2;
+		int m_spawnedMineCount = 0;
 
 		Texture2D m_spriteSheet;
 
