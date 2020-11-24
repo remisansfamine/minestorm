@@ -65,13 +65,13 @@ Contrôles:
 
 <ins>*annexe01.gif:*</ins>
 - Debug mode (AABBs, vecteurs directeurs et wireframe des polygones)
--> Calcul des AABBs: **ConvexPolygon::getAABB() et ConcavePolygon::getAABB() dans [maths_utils.cpp](./src/maths_utils.cpp) (l.48 et 67)**
+-> Calcul des AABBs: **ConvexPolygon::getAABB() et ConcavePolygon::getAABB() dans [./src/maths_utils.cpp](./src/maths_utils.cpp) (l.48 et 67)**
 
 - Bordures de l’écran fonctionnelles
--> Déplacement des entités à travers les bordures de l’écran: **Entity::stayInScreen() dans [entity.cpp](./src/entity.cpp) (l.36)**
+-> Déplacement des entités à travers les bordures de l’écran: **Entity::stayInScreen() dans [./src/entity.cpp](./src/entity.cpp) (l.36)**
 
 - Mouvements du joueur, modèle dynamique newtonien
--> Vecteurs vitesse (bleu) et accélération (blanc), friction et drift: **Player::move() dans [player.cpp](./src/player.cpp) (l.151)**
+-> Vecteurs vitesse (bleu) et accélération (blanc), friction et drift: **Player::move() dans [./src/player.cpp](./src/player.cpp) (l.151)**
 
 <div style="text-align:center">
 <img src="annexes/annexe01.gif" width=512/>
@@ -83,10 +83,10 @@ Contrôles:
 - Système de tir
 
 - Collisions\
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection Circle/AABB: **intersect() dans [intersection.cpp](./src/intersection.cpp) (l.106)**\
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection SAT Circle/Convexe Polygon: **intersect() dans [intersection.cpp](./src/intersection.cpp) (l.191)**\
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection Circle/Concave Polygon: **intersect() dans [intersection.cpp](./src/intersection.cpp) (l.253)**\
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection Circle/Circle: **intersect() dans [intersection.cpp](./src/intersection.cpp) (l.97)**
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection Circle/AABB: **intersect() dans [./src/intersection.cpp](./src/intersection.cpp) (l.106)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection SAT Circle/Convexe Polygon: **intersect() dans [./src/intersection.cpp](./src/intersection.cpp) (l.191)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection Circle/Concave Polygon: **intersect() dans [./src/intersection.cpp](./src/intersection.cpp) (l.253)**\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> Intersection Circle/Circle: **intersect() dans [./src/intersection.cpp](./src/intersection.cpp) (l.97)**
 - Subdivision des mines
 
 <div style="text-align:center">
@@ -97,11 +97,11 @@ Contrôles:
 
 <ins>*annexe03.gif (La taille des entités a été agrandie pour voir correctement les collisions):*</ins>
 - Collisions\
--> Intersection AABB/AABB: **intersect() dans [intersection.cpp](./src/intersection.cpp) (l.122)**\
+-> Intersection AABB/AABB: **intersect() dans [./src/intersection.cpp](./src/intersection.cpp) (l.122)**\
 -> Intersection SAT Convex Polygon/Convex Polygon: **intersect() dans
-[intersection.cpp](./src/intersection.cpp) (l.157)**\
+[./src/intersection.cpp](./src/intersection.cpp) (l.157)**\
 -> Intersection Concave Polygon/Concave Polygon: **intersect() dans
-[intersection.cpp](./src/intersection.cpp) (l.228)**
+[./src/intersection.cpp](./src/intersection.cpp) (l.228)**
 
 <div style="text-align:center">
 <img src="annexes/annexe03.gif" width=512/>
@@ -111,38 +111,38 @@ Contrôles:
 
 <ins>*annexe04.gif:*</ins>
 - Bordures de l’écran fonctionnelles\
--> Choix du chemin le plus court: **Entity::getInScreenDirection() dans [entity.cpp](./src/entity.cpp)
+-> Choix du chemin le plus court: **Entity::getInScreenDirection() dans [./src/entity.cpp](./src/entity.cpp)
 (l.24)**
 
 <div style="text-align:center">
 <img src="annexes/annexe04.gif" width=512/>
 </div>
-
+</div>
 <br />
 
 <ins>*Autres fonctions et structs non-représentées:*</ins>
-- Structs des primitives géométriques (vecteurs, lines, segments...): **[maths_toolbox.h](./include/maths_toolbox.h)**
+- Structs des primitives géométriques (vecteurs, lines, segments...): **[./include/maths_toolbox.h](./include/maths_toolbox.h)**
 - Entièreté des fonctions de vecteur (operators, magnitude, distance,
-normal, rotate, normalization, dot product): **[vector.cpp](./src/vector.cpp)**
+normal, rotate, normalization, dot product): **[./src/vector.cpp](./src/vector.cpp)**
 
-- Struct de range: **[range.h](./include/range.h)**
+- Struct de range: **[./include/range.h](./include/range.h)**
 - Entièreté des fonctions de range (constructeurs, merge et interfere): **[range.cpp](./src/range.cpp)**
 
-- Struct de référentiel: **[referential.h](./include/referential.h)**
+- Struct de référentiel: **[./include/referential.h](./include/referential.h)**
 - Fonctions de référentiel demandées (Position/Vector Local <-> World): quatre
-première fonctions dans **[referential.cpp](./src/referential.cpp)**
-- Fonctions de référentiel utilitaires (ex: Rotate referential, Convex/Concave Polygon Local <-> World): autres fonctions dans **[referential.cpp](./src/referential.cpp)**
+première fonctions dans **[./src/referential.cpp](./src/referential.cpp)**
+- Fonctions de référentiel utilitaires (ex: Rotate referential, Convex/Concave Polygon Local <-> World): autres fonctions dans **[./src/referential.cpp](./src/referential.cpp)**
 
 - Autres fonctions d’intersection non-utilisées (Line/Line, Segment/Circle, etc.):
-**[intersection.cpp](./src/intersection.cpp)**
+**[./src/intersection.cpp](./src/intersection.cpp)**
 
-- Autres fonctions utilitaires (min, max, clamp, sign, getAABB, etc.): **[maths_utils.cpp](./src/maths_utils.cpp)**
+- Autres fonctions utilitaires (min, max, clamp, sign, getAABB, etc.): **[./src/maths_utils.cpp](./src/maths_utils.cpp)**
 
-- Calcul de la vitesse d’une mine et de son score rapporté en fonction de sa taille et de la difficulté: constructeurs des **fireball_mines, floating_mines, magnetic_fireball_mines, magnetic_mines**, exemple dans **[floating_mine.cpp](./src/floating_mine.cpp) (l.42 et 44)**
+- Calcul de la vitesse d’une mine et de son score rapporté en fonction de sa taille et de la difficulté: constructeurs des **fireball_mines, floating_mines, magnetic_fireball_mines, magnetic_mines**, exemple dans **[./src/floating_mine.cpp](./src/floating_mine.cpp) (l.42 et 44)**
 
 - Utilisation des fonctions d’intersections:\
 -> **Bullet::checkCollisionMinelayer(), Bullet::checkCollisionMine(),
-Bullet::checkCollisionFireball() dans [bullet.cpp](./src/bullet.cpp) (l.38, 60 et 88)**\
+Bullet::checkCollisionFireball() dans [./src/bullet.cpp](./src/bullet.cpp) (l.38, 60 et 88)**\
 -> **Fireball::checkCollisionScreenBorder(), Fireball::checkCollisionPlayer()
-dans [fireball.cpp](./src/fireball.cpp) (l.48 et 54)**\
--> **Player::checkCollisionMine() dans [player.cpp](./src/fireball.cpp) (l.79)**
+dans [./src/fireball.cpp](./src/fireball.cpp) (l.48 et 54)**\
+-> **Player::checkCollisionMine() dans [./src/player.cpp](./src/fireball.cpp) (l.79)**
