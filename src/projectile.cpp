@@ -14,12 +14,6 @@ Projectile::Projectile(const Referential2D& referential, Color color)
 	m_color = color;
 }
 
-Projectile::~Projectile()
-{
-	for (int i = 0; i < 5; i++)
-		Particle(m_referential, 0.005f, m_color, randomVector() * 30.f, true);
-}
-
 void Projectile::update(float deltaTime)
 {
 	m_lifeTime -= deltaTime;
@@ -52,4 +46,10 @@ void Projectile::drawDebug() const
 Circle Projectile::getCircle() const
 {
 	return { m_referential.m_origin, m_radius * m_size };
+}
+
+void Projectile::createParticle()
+{
+	for (int i = 0; i < 5; i++)
+		Particle(m_referential, 0.005f, m_color, randomVector() * 30.f, true);
 }

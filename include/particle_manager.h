@@ -10,8 +10,8 @@ class ParticleManager
 		void clear();
 
 	public:
-		std::vector<Particle> m_frontParticles;
-		std::vector<Particle> m_backParticles;
+		std::vector<Particle>	m_frontParticles;
+		std::vector<Particle>	m_backParticles;
 
 		ParticleManager();
 		~ParticleManager();

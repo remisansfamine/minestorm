@@ -38,12 +38,6 @@ Mine::Mine(int size, SpawnPoint* sp)
 	entityManager->m_mines.push_back(this);
 }
 
-Mine::~Mine()
-{
-	for (int i = 0; i < 5; i++)
-		Particle(m_referential, 0.005f, RED, randomVector() * 50.f, true);
-}
-
 void Mine::update(float deltaTime)
 {
 	move(deltaTime);
@@ -74,4 +68,12 @@ void Mine::drawDebug() const
 
 	for (const ConvexPolygon& polygon : polygonGlobal.polygon)
 		polygon.drawDebug();
+}
+
+void Mine::atDestroy()
+{
+	m_destroyed = true;
+
+	for (int i = 0; i < 5; i++)
+		Particle(m_referential, 0.005f, RED, randomVector() * 50.f);
 }

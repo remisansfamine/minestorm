@@ -4,10 +4,10 @@
 
 struct Referential2D
 {
-    Vector2D m_origin = { 0.f, 0.f };
-    Vector2D m_i = { 1.f, 0.f };
-    Vector2D m_j = { 0.f, 1.f };
-    float    m_angle = 0.f;
+    Vector2D    m_origin = { 0.f, 0.f };
+    Vector2D    m_i = { 1.f, 0.f };
+    Vector2D    m_j = { 0.f, 1.f };
+    float       m_angle = 0.f;
 
     Referential2D() = default;
     Referential2D(const Vector2D& origin, const Vector2D& i = { 1.f, 0.f });

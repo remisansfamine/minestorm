@@ -5,9 +5,8 @@
 class Minelayer : public Entity
 {
 	public:
-		bool m_canSpawn = true;
-
-		int m_score = 1000.f;
+		bool	m_canSpawn = true;
+		int		m_score = 1000.f;
 
 		ConcavePolygon m_collider;
 

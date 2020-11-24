@@ -10,6 +10,7 @@ class Bullet : public Projectile
 {
 	private:
 		Player* m_owner = nullptr;
+
 		void checkCollisionMinelayer();
 		void checkCollisionMine();
 		void checkCollisionFireball();

@@ -36,6 +36,9 @@ void Bullet::update(float deltaTime)
 	checkCollisionMinelayer();
 	checkCollisionMine();
 	checkCollisionFireball();
+
+	if (m_destroyed)
+		createParticle();
 }
 
 void Bullet::checkCollisionMinelayer()
@@ -106,6 +109,8 @@ void Bullet::checkCollisionFireball()
 
 			if (m_owner)
 				m_owner->m_score += fireball.m_score;
+
+			fireball.createParticle();
 
 			m_destroyed = fireball.m_destroyed = true;
 			return;

@@ -89,7 +89,7 @@ void MagneticMine::update(float deltaTime)
 
 void MagneticMine::atDestroy()
 {
-	m_destroyed = true;
+	Mine::atDestroy();
 
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;

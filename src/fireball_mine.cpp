@@ -65,7 +65,7 @@ void FireballMine::atDestroy()
 {
 	Fireball(m_referential, ORANGE);
 
-	m_destroyed = true;
+	Mine::atDestroy();
 
 	if (m_mineSize == 0 || !entityManager->areCheckpointAvailable())
 		return;
